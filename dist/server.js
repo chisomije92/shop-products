@@ -4,6 +4,7 @@ import fs from "fs";
 const server = http.createServer((req, res) => {
     //   console.log(req.url, req.method, req.headers);
     const url = req.url;
+    const method = req.method;
     if (url === "/") {
         res.write("<html>");
         res.write("<head><title>Enter Message</title></head>");
@@ -11,8 +12,17 @@ const server = http.createServer((req, res) => {
         res.write("</html>");
         return res.end();
     }
-    if (url === "/message" && req.method === "POST") {
-        fs.writeFileSync("message.txt", "dummy message");
+    if (url === "/message" && method === "POST") {
+        const body = [];
+        res.on("data", (chunk) => {
+            body.push(chunk);
+        });
+        res.on("end", () => {
+            const parsedBody = Buffer.concat(body).toString();
+            const message = parsedBody.split("=")[1];
+            fs.writeFileSync("sample.txt", message);
+            console.log(message);
+        });
         res.statusCode = 302;
         res.setHeader("Location", "/");
         return res.end();
