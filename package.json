@@ -2,14 +2,15 @@
   "name": "nodejs-guide",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": " nodemon --experimental-specifier-resolution=node dist/server.js"
   },
   "devDependencies": {
     "@types/node": "^17.0.36",
     "nodemon": "^2.0.16",
+    "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   }
 }
