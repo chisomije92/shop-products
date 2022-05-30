@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "start": " nodemon --experimental-specifier-resolution=node dist/server.js"
+    "start": " nodemon dist/server.js"
   },
   "devDependencies": {
     "@types/node": "^17.0.36",
