@@ -1,8 +1,17 @@
 import http from "http";
 import { requestHandler } from "./routes.js";
-// const requestHandler = require("./routes");
-// const http = require("http");
+import express from "express";
 
-const server = http.createServer(requestHandler);
+const app = express();
+
+app.use((req, res, next) => {
+  console.log("Middleware 1");
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log("Middleware 2");
+});
+const server = http.createServer(app);
 
 server.listen(3000);
