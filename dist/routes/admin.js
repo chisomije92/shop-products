@@ -5,7 +5,10 @@ export const products = [];
 const __dirname = path.resolve();
 router.get("/add-product", (req, res, next) => {
     //   res.sendFile(path.join(__dirname, "./", "views", "add-product.html"));
-    res.render("add-product", { pageTitle: "Add Product" });
+    res.render("add-product", {
+        pageTitle: "Add Product",
+        path: "/admin/add-product",
+    });
 });
 router.post("/add-product", (req, res, next) => {
     products.push({ title: req.body.title });
