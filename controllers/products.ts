@@ -1,10 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-
-interface ProductType {
-  title: string;
-}
-
-export const products: ProductType[] = [];
+import { Product } from "../models/product.js";
 
 export const getAddProduct = (
   req: Request,
@@ -22,7 +17,8 @@ export const postAddProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  products.push({ title: req.body.title });
+  const product = new Product(req.body.title);
+  product.save();
   res.redirect("/");
 };
 
@@ -31,6 +27,6 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(products);
+  const products = Product.fetchAll();
   res.render("shop", { products, pageTitle: "Shop", path: "/" });
 };
