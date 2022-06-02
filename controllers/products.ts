@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Product } from "../models/product.js";
+import { Product, ProductType } from "../models/product.js";
 
 export const getAddProduct = (
   req: Request,
@@ -27,6 +27,7 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  const products = Product.fetchAll();
-  res.render("shop", { products, pageTitle: "Shop", path: "/" });
+  const products = Product.fetchAll((products: ProductType[]) => {
+    res.render("shop", { products, pageTitle: "Shop", path: "/" });
+  });
 };

@@ -11,7 +11,8 @@ export const postAddProduct = (req, res, next) => {
     res.redirect("/");
 };
 export const getProducts = (req, res, next) => {
-    const products = Product.fetchAll();
-    res.render("shop", { products, pageTitle: "Shop", path: "/" });
+    const products = Product.fetchAll((products) => {
+        res.render("shop", { products, pageTitle: "Shop", path: "/" });
+    });
 };
 //# sourceMappingURL=products.js.map
