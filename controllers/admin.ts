@@ -28,6 +28,10 @@ export const getProducts = (
   next: NextFunction
 ) => {
   const products = Product.fetchAll((products: ProductType[]) => {
-    res.render("shop/product-list", { products, pageTitle: "Shop", path: "/" });
+    res.render("admin/products", {
+      products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
+    });
   });
 };
