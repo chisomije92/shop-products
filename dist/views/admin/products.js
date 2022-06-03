@@ -1,6 +1,6 @@
-import { Product } from "../models/product.js";
+import { Product } from "../../models/product.js";
 export const getAddProduct = (req, res, next) => {
-    res.render("admin/add-product", {
+    res.render("add-product", {
         pageTitle: "Add Product",
         path: "/admin/add-product",
     });

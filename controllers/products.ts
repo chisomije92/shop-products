@@ -6,7 +6,7 @@ export const getAddProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  res.render("add-product", {
+  res.render("admin/add-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
   });
@@ -28,6 +28,6 @@ export const getProducts = (
   next: NextFunction
 ) => {
   const products = Product.fetchAll((products: ProductType[]) => {
-    res.render("shop", { products, pageTitle: "Shop", path: "/" });
+    res.render("shop/product-list", { products, pageTitle: "Shop", path: "/" });
   });
 };
