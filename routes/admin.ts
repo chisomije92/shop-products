@@ -1,5 +1,4 @@
 import express from "express";
-import path, { dirname } from "path";
 import { getAddProduct, postAddProduct } from "../controllers/products.js";
 
 const router = express.Router();
