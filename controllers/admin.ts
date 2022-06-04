@@ -17,10 +17,10 @@ export const postAddProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
-  const price = req.body.price;
-  const description = req.body.description;
+  const title: string = req.body.title;
+  const imageUrl: string = req.body.imageUrl;
+  const price: number = req.body.price;
+  const description: string = req.body.description;
   const product = new Product(title, imageUrl, description, price);
   product.save();
   res.redirect("/");
