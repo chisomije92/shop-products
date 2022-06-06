@@ -8,6 +8,13 @@ export const getProducts = (req, res, next) => {
         });
     });
 };
+export const getProduct = (req, res, next) => {
+    const prodId = req.params.productId;
+    Product.findById(prodId, (product) => {
+        console.log(product);
+    });
+    res.redirect("/");
+};
 export const getIndex = (req, res, next) => {
     const products = Product.fetchAll((products) => {
         res.render("shop/index", { products, pageTitle: "Shop", path: "/" });

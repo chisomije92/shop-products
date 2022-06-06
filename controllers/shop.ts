@@ -15,6 +15,14 @@ export const getProducts = (
   });
 };
 
+export const getProduct = (req: Request, res: Response, next: NextFunction) => {
+  const prodId = req.params.productId;
+  Product.findById(prodId, (product: ProductType) => {
+    console.log(product);
+  });
+  res.redirect("/");
+};
+
 export const getIndex = (req: Request, res: Response, next: NextFunction) => {
   const products = Product.fetchAll((products: ProductType[]) => {
     res.render("shop/index", { products, pageTitle: "Shop", path: "/" });

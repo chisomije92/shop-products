@@ -3,7 +3,11 @@ import path from "path";
 
 const __dirname = path.resolve();
 export interface ProductType {
+  id: string | undefined;
   title: string;
+  price: number;
+  description: string;
+  imageUrl: string;
 }
 
 const p = path.join(__dirname, "data", "products.json");
@@ -20,7 +24,7 @@ const getProductsFromFile = (cb: (products: ProductType[]) => void) => {
 };
 
 export class Product {
-  id?: string;
+  id: string | undefined;
   title: string;
   imageUrl: string;
   description: string;
@@ -29,8 +33,10 @@ export class Product {
     title: string,
     imageUrl: string,
     description: string,
-    price: number
+    price: number,
+    id?: string
   ) {
+    this.id = id;
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -49,5 +55,14 @@ export class Product {
 
   static fetchAll(cb: (products: ProductType[]) => void) {
     getProductsFromFile(cb);
+  }
+
+  static findById(id: string, cb: (product: ProductType) => void) {
+    getProductsFromFile((products) => {
+      const product = products.find((p) => p.id === id);
+      if (product) {
+        cb(product);
+      }
+    });
   }
 }

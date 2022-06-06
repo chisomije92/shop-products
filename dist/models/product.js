@@ -13,7 +13,8 @@ const getProductsFromFile = (cb) => {
     });
 };
 export class Product {
-    constructor(title, imageUrl, description, price) {
+    constructor(title, imageUrl, description, price, id) {
+        this.id = id;
         this.title = title;
         this.imageUrl = imageUrl;
         this.description = description;
@@ -30,6 +31,14 @@ export class Product {
     }
     static fetchAll(cb) {
         getProductsFromFile(cb);
+    }
+    static findById(id, cb) {
+        getProductsFromFile((products) => {
+            const product = products.find((p) => p.id === id);
+            if (product) {
+                cb(product);
+            }
+        });
     }
 }
 //# sourceMappingURL=product.js.map
