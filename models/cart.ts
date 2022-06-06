@@ -34,9 +34,7 @@ export class Cart {
       if (!err) {
         cart = JSON.parse(fileContent.toString());
       }
-      const existingProductIndex = cart.products.findIndex(
-        (p: any) => p.id === id
-      );
+      const existingProductIndex = cart.products.findIndex((p) => p.id === id);
       const existingProduct = cart.products[existingProductIndex];
 
       let updatedProduct;

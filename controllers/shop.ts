@@ -44,7 +44,7 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const postCart = (req: Request, res: Response, next: NextFunction) => {
-  const prodId = req.body.productId;
+  const prodId: string = req.body.productId;
   Product.findById(prodId, (product: ProductType) => {
     Cart.addProduct(prodId, product.price);
   });
