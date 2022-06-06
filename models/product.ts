@@ -20,6 +20,7 @@ const getProductsFromFile = (cb: (products: ProductType[]) => void) => {
 };
 
 export class Product {
+  id?: string;
   title: string;
   imageUrl: string;
   description: string;
@@ -37,6 +38,7 @@ export class Product {
   }
 
   save() {
+    this.id = Math.random().toString();
     getProductsFromFile((products) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err) => {
