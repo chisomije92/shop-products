@@ -14,6 +14,7 @@ export const postAddProduct = (req, res, next) => {
     const product = new Product(title, imageUrl, description, price);
     product.save();
     res.redirect("/");
+    console.log("postAddProduct");
 };
 export const getEditProduct = (req, res, next) => {
     const editMode = req.query.edit;

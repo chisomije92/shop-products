@@ -25,6 +25,7 @@ export const postAddProduct = (
   const product = new Product(title, imageUrl, description, price);
   product.save();
   res.redirect("/");
+  console.log("postAddProduct");
 };
 
 export const getEditProduct = (
@@ -56,10 +57,10 @@ export const postEditProduct = (
   next: NextFunction
 ) => {
   const prodId: string = req.body.productId;
-  const updatedTitle = req.body.title;
-  const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
-  const updatedDescription = req.body.description;
+  const updatedTitle: string = req.body.title;
+  const updatedPrice: number = req.body.price;
+  const updatedImageUrl: string = req.body.imageUrl;
+  const updatedDescription: string = req.body.description;
   const updatedProduct = new Product(
     updatedTitle,
     updatedImageUrl,

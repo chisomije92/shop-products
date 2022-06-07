@@ -3,7 +3,7 @@ import path from "path";
 
 const __dirname = path.resolve();
 export interface ProductType {
-  id: string | undefined;
+  id?: string;
   title: string;
   price: number;
   description: string;
@@ -24,7 +24,7 @@ const getProductsFromFile = (cb: (products: ProductType[]) => void) => {
 };
 
 export class Product {
-  id: string | undefined;
+  id?: string;
   title: string;
   imageUrl: string;
   description: string;
@@ -60,6 +60,7 @@ export class Product {
         fs.writeFile(p, JSON.stringify(products), (err) => {
           console.log(err);
         });
+        console.log("No product id provided");
       }
     });
   }
