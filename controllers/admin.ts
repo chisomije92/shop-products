@@ -50,6 +50,27 @@ export const getEditProduct = (
   });
 };
 
+export const postEditProduct = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const prodId: string = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDescription = req.body.description;
+  const updatedProduct = new Product(
+    updatedTitle,
+    updatedImageUrl,
+    updatedDescription,
+    updatedPrice,
+    prodId
+  );
+  updatedProduct.save();
+  res.redirect("/admin/products");
+};
+
 export const getProducts = (
   req: Request,
   res: Response,

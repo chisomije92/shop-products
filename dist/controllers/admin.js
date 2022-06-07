@@ -33,6 +33,16 @@ export const getEditProduct = (req, res, next) => {
         });
     });
 };
+export const postEditProduct = (req, res, next) => {
+    const prodId = req.body.productId;
+    const updatedTitle = req.body.title;
+    const updatedPrice = req.body.price;
+    const updatedImageUrl = req.body.imageUrl;
+    const updatedDescription = req.body.description;
+    const updatedProduct = new Product(updatedTitle, updatedImageUrl, updatedDescription, updatedPrice, prodId);
+    updatedProduct.save();
+    res.redirect("/admin/products");
+};
 export const getProducts = (req, res, next) => {
     const products = Product.fetchAll((products) => {
         res.render("admin/products", {
