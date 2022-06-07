@@ -85,3 +85,13 @@ export const getProducts = (
     });
   });
 };
+
+export const postDeleteProduct = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const prodId: string = req.body.productId;
+  Product.deleteById(prodId);
+  res.redirect("/admin/products");
+};

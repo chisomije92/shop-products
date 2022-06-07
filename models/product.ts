@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { Cart } from "./cart.js";
 
 const __dirname = path.resolve();
 export interface ProductType {
@@ -62,6 +63,18 @@ export class Product {
         });
         console.log("No product id provided");
       }
+    });
+  }
+
+  static deleteById(id: string) {
+    getProductsFromFile((products) => {
+      const product = products.find((p) => p.id === id);
+      const updatedProducts = products.filter((p) => p.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (!err) {
+          Cart.deleteProduct(id, product!.price);
+        }
+      });
     });
   }
 
