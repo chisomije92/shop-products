@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Cart } from "../models/cart.js";
+import { Cart, CartType } from "../models/cart.js";
 import { Product, ProductType } from "../models/product.js";
 
 export const getProducts = (
@@ -35,10 +35,26 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
   const products = Product.fetchAll((products: ProductType[]) => {
-    res.render("shop/cart", {
-      products,
-      pageTitle: "Your Cart",
-      path: "/cart",
+    Cart.getCart((cart) => {
+      Product.fetchAll((products) => {
+        const cartProducts = [];
+        for (let product of products) {
+          const cartProductData = cart?.products.find(
+            (p) => p.id === product.id
+          );
+          if (cartProductData) {
+            cartProducts.push({
+              productData: product,
+              qty: cartProductData.qty,
+            });
+          }
+        }
+        res.render("shop/cart", {
+          pageTitle: "Your Cart",
+          path: "/cart",
+          products: cartProducts,
+        });
+      });
     });
   });
 };
@@ -49,6 +65,18 @@ export const postCart = (req: Request, res: Response, next: NextFunction) => {
     Cart.addProduct(prodId, product.price);
   });
   res.redirect("/cart");
+};
+
+export const deleteCartDeleteProduct = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const prodId: string = req.body.productId;
+  Product.findById(prodId, (product: ProductType) => {
+    Cart.deleteProduct(prodId, product.price);
+    res.redirect("/cart");
+  });
 };
 
 export const getOrders = (req: Request, res: Response, next: NextFunction) => {

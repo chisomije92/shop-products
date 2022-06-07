@@ -17,17 +17,6 @@ export interface CartType {
 }
 
 export class Cart {
-  // products:ProductType = [];
-  // totalPrice: number = 0;
-
-  // constructor(
-  //     products: ProductType[],
-  //     totalPrice: number
-  // ) {
-  //     this.products = products;
-  //     this.totalPrice = totalPrice;
-  // }
-
   static addProduct(id: string, productPrice: number) {
     fs.readFile(p, (err, fileContent) => {
       let cart: CartType = { products: [], totalPrice: 0 };
@@ -76,6 +65,18 @@ export class Cart {
       fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
         console.log(err);
       });
+    });
+  }
+
+  static getCart(cb: (cart: CartType | null) => void) {
+    fs.readFile(p, (err, fileContent) => {
+      let cart: CartType = { products: [], totalPrice: 0 };
+      if (err) {
+        cb(null);
+      } else {
+        cart = JSON.parse(fileContent.toString());
+        cb(cart);
+      }
     });
   }
 }

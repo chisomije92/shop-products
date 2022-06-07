@@ -3,15 +3,6 @@ import fs from "fs";
 const __dirname = path.resolve();
 const p = path.join(__dirname, "data", "cart.json");
 export class Cart {
-    // products:ProductType = [];
-    // totalPrice: number = 0;
-    // constructor(
-    //     products: ProductType[],
-    //     totalPrice: number
-    // ) {
-    //     this.products = products;
-    //     this.totalPrice = totalPrice;
-    // }
     static addProduct(id, productPrice) {
         fs.readFile(p, (err, fileContent) => {
             let cart = { products: [], totalPrice: 0 };
@@ -55,6 +46,18 @@ export class Cart {
             fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
                 console.log(err);
             });
+        });
+    }
+    static getCart(cb) {
+        fs.readFile(p, (err, fileContent) => {
+            let cart = { products: [], totalPrice: 0 };
+            if (err) {
+                cb(null);
+            }
+            else {
+                cart = JSON.parse(fileContent.toString());
+                cb(cart);
+            }
         });
     }
 }
