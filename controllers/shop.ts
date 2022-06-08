@@ -8,7 +8,7 @@ export const getProducts = (
   next: NextFunction
 ) => {
   const products = Product.fetchAll()
-    .then(([row, fields]) => {
+    .then(([row]) => {
       res.render("shop/product-list", {
         products: row,
         pageTitle: "All Products",
@@ -16,29 +16,22 @@ export const getProducts = (
       });
     })
     .catch((err) => {});
-  // const products = Product.fetchAll((products: ProductType[]) => {
-  //   res.render("shop/product-list", {
-  //     products,
-  //     pageTitle: "All Products",
-  //     path: "/products",
-  //   });
-  // });
 };
 
 export const getProduct = (req: Request, res: Response, next: NextFunction) => {
   const prodId = req.params.productId;
-  // Product.findById(prodId, (product: ProductType) => {
-  // res.render("shop/product-detail", {
-  //   product,
-  //   pageTitle: "Product Detail",
-  //   path: "/products",
-  // });
-  // });
+  Product.findById(prodId).then(([row]) => {
+    res.render("shop/product-detail", {
+      product: row[0],
+      pageTitle: row[0].title,
+      path: "/products",
+    });
+  });
 };
 
 export const getIndex = (req: Request, res: Response, next: NextFunction) => {
   const products = Product.fetchAll()
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render("shop/index", {
         pageTitle: "Shop",
         path: "/",

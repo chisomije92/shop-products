@@ -71,8 +71,12 @@ export const postEditProduct = (
     updatedPrice,
     prodId
   );
-  updatedProduct.save();
-  res.redirect("/admin/products");
+  updatedProduct
+    .save()
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((err: any) => {});
 };
 
 export const getProducts = (

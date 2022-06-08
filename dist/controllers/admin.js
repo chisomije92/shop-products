@@ -43,8 +43,12 @@ export const postEditProduct = (req, res, next) => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedDescription = req.body.description;
     const updatedProduct = new Product(updatedTitle, updatedImageUrl, updatedDescription, updatedPrice, prodId);
-    updatedProduct.save();
-    res.redirect("/admin/products");
+    updatedProduct
+        .save()
+        .then(() => {
+        res.redirect("/admin/products");
+    })
+        .catch((err) => { });
 };
 export const getProducts = (req, res, next) => {
     //   const products = Product.fetchAll((products: ProductType[]) => {

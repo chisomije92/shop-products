@@ -1,7 +1,7 @@
 import { Product } from "../models/product.js";
 export const getProducts = (req, res, next) => {
     const products = Product.fetchAll()
-        .then(([row, fields]) => {
+        .then(([row]) => {
         res.render("shop/product-list", {
             products: row,
             pageTitle: "All Products",
@@ -9,27 +9,20 @@ export const getProducts = (req, res, next) => {
         });
     })
         .catch((err) => { });
-    // const products = Product.fetchAll((products: ProductType[]) => {
-    //   res.render("shop/product-list", {
-    //     products,
-    //     pageTitle: "All Products",
-    //     path: "/products",
-    //   });
-    // });
 };
 export const getProduct = (req, res, next) => {
     const prodId = req.params.productId;
-    // Product.findById(prodId, (product: ProductType) => {
-    // res.render("shop/product-detail", {
-    //   product,
-    //   pageTitle: "Product Detail",
-    //   path: "/products",
-    // });
-    // });
+    Product.findById(prodId).then(([row]) => {
+        res.render("shop/product-detail", {
+            product: row[0],
+            pageTitle: row[0].title,
+            path: "/products",
+        });
+    });
 };
 export const getIndex = (req, res, next) => {
     const products = Product.fetchAll()
-        .then(([rows, fieldData]) => {
+        .then(([rows]) => {
         res.render("shop/index", {
             pageTitle: "Shop",
             path: "/",
