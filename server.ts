@@ -4,6 +4,9 @@ import adminRoute from "./routes/admin.js";
 import shopRoute from "./routes/shop.js";
 import path from "path";
 import { get404Page } from "./controllers/404.js";
+import db from "./utils/database";
+
+db.execute(``);
 
 const __dirname = path.resolve();
 const app = express();
