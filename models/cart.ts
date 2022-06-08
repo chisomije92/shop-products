@@ -1,4 +1,3 @@
-import { ProductType } from "./product";
 import path from "path";
 import fs from "fs";
 

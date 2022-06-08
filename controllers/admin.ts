@@ -38,17 +38,20 @@ export const getEditProduct = (
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findById(prodId, (product: ProductType) => {
-    if (!product) {
-      return res.redirect("/");
-    }
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editing: editMode,
-      product,
-    });
-  });
+  Product.findById(
+    prodId
+    //      (product: ProductType) => {
+    //     if (!product) {
+    //       return res.redirect("/");
+    //     }
+    //     res.render("admin/edit-product", {
+    //       pageTitle: "Edit Product",
+    //       path: "/admin/edit-product",
+    //       editing: editMode,
+    //       product,
+    //     });
+    //   }
+  );
 };
 
 export const postEditProduct = (
@@ -77,13 +80,13 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  const products = Product.fetchAll((products: ProductType[]) => {
-    res.render("admin/products", {
-      products,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
-    });
-  });
+  //   const products = Product.fetchAll((products: ProductType[]) => {
+  //     res.render("admin/products", {
+  //       products,
+  //       pageTitle: "Admin Products",
+  //       path: "/admin/products",
+  //     });
+  //   });
 };
 
 export const postDeleteProduct = (

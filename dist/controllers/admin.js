@@ -22,17 +22,19 @@ export const getEditProduct = (req, res, next) => {
         return res.redirect("/");
     }
     const prodId = req.params.productId;
-    Product.findById(prodId, (product) => {
-        if (!product) {
-            return res.redirect("/");
-        }
-        res.render("admin/edit-product", {
-            pageTitle: "Edit Product",
-            path: "/admin/edit-product",
-            editing: editMode,
-            product,
-        });
-    });
+    Product.findById(prodId
+    //      (product: ProductType) => {
+    //     if (!product) {
+    //       return res.redirect("/");
+    //     }
+    //     res.render("admin/edit-product", {
+    //       pageTitle: "Edit Product",
+    //       path: "/admin/edit-product",
+    //       editing: editMode,
+    //       product,
+    //     });
+    //   }
+    );
 };
 export const postEditProduct = (req, res, next) => {
     const prodId = req.body.productId;
@@ -45,13 +47,13 @@ export const postEditProduct = (req, res, next) => {
     res.redirect("/admin/products");
 };
 export const getProducts = (req, res, next) => {
-    const products = Product.fetchAll((products) => {
-        res.render("admin/products", {
-            products,
-            pageTitle: "Admin Products",
-            path: "/admin/products",
-        });
-    });
+    //   const products = Product.fetchAll((products: ProductType[]) => {
+    //     res.render("admin/products", {
+    //       products,
+    //       pageTitle: "Admin Products",
+    //       path: "/admin/products",
+    //     });
+    //   });
 };
 export const postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;

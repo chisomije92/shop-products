@@ -1,7 +1,5 @@
 import mysql2 from "mysql2";
 
-// const mysql2 = require("mysql2");
-
 const pool = mysql2.createPool({
   host: "localhost",
   user: "root",
@@ -9,5 +7,4 @@ const pool = mysql2.createPool({
   password: "jerry",
 });
 
-// module.exports = pool.promise();
 export default pool.promise();
