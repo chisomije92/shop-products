@@ -46,6 +46,10 @@ sequelize
     return user;
 })
     .then((user) => {
+    // @ts-ignore
+    return user.createCart();
+})
+    .then((cart) => {
     app.listen(3000);
 })
     .catch((err) => {

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { CartModelType } from "../models/cart.js";
 import Product, { ProductType } from "../models/product.js";
 
 export const getProducts = (
@@ -60,6 +61,23 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
+  req.user
+    ?.getCart()
+    .then((cart: any) => {
+      return cart
+        .getProducts()
+        .then((products: ProductType[]) => {
+          res.render("shop/cart", {
+            path: "/cart",
+            pageTitle: "Your Cart",
+            products: products,
+          });
+        })
+        .catch((err: Error) => {});
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
   // const products = Product.fetchAll((products: ProductType[]) => {
   //   Cart.getCart(
   //     (cart) => {

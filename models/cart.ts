@@ -1,7 +1,7 @@
 import sequelize from "../utils/database.js";
 import Sequelize, { Instance } from "sequelize";
 
-interface CartModelType {
+export interface CartModelType {
   id: number;
   quantity: number;
 }
