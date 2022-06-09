@@ -3,7 +3,7 @@ import Sequelize, { Instance } from "sequelize";
 
 export interface CartItemModelType {
   id: number;
-  //   quantity: number;
+  quantity: number;
 }
 
 type CartItemInstance = Instance<CartItemModelType> & CartItemModelType;
@@ -16,7 +16,7 @@ export const CartItem = sequelize.define<CartItemInstance, CartItemModelType>(
       allowNull: false,
       autoIncrement: true,
     },
-    // quantity: Sequelize.INTEGER,
+    quantity: Sequelize.INTEGER,
   }
 );
 

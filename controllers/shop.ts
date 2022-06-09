@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { CartModelType } from "../models/cart.js";
+import { CartItemModelType } from "../models/cart-item.js";
+import { Cart, CartModelType } from "../models/cart.js";
 import Product, { ProductType } from "../models/product.js";
 
 export const getProducts = (
@@ -78,34 +79,41 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
     .catch((err: Error) => {
       console.log(err);
     });
-  // const products = Product.fetchAll((products: ProductType[]) => {
-  //   Cart.getCart(
-  //     (cart) => {
-  //     Product.fetchAll((products) => {
-  //       const cartProducts = [];
-  //       for (let product of products) {
-  //         const cartProductData = cart?.products.find(
-  //           (p) => p.id === product.id
-  //         );
-  //         if (cartProductData) {
-  //           cartProducts.push({
-  //             productData: product,
-  //             qty: cartProductData.qty,
-  //           });
-  //         }
-  //       }
-  //       res.render("shop/cart", {
-  //         pageTitle: "Your Cart",
-  //         path: "/cart",
-  //         products: cartProducts,
-  //       });
-  //     });
-  //   });
-  // });
 };
 
 export const postCart = (req: Request, res: Response, next: NextFunction) => {
   const prodId: string = req.body.productId;
+  let fetchedCart: any;
+  req.user
+    ?.getCart()
+    .then((cart: any) => {
+      fetchedCart = cart;
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then((products: ProductType[]) => {
+      let product: any;
+
+      if (products.length > 0) {
+        product = products[0];
+      }
+      let newQuantity = 1;
+      if (product) {
+        newQuantity = product.cartItem.quantity + 1;
+      }
+      return Product.findByPk(prodId)
+        .then((product) => {
+          return fetchedCart.addProduct(product, {
+            through: { quantity: newQuantity },
+          });
+        })
+        .then(() => {
+          res.redirect("/cart");
+        })
+        .catch((err: Error) => {
+          console.log(err);
+        });
+    });
+
   // Product.findById(prodId, (product: ProductType) => {
   //   Cart.addProduct(prodId, product.price);
   // });

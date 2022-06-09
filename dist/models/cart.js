@@ -7,7 +7,7 @@ export const Cart = sequelize.define("cart", {
         allowNull: false,
         autoIncrement: true,
     },
-    quantity: Sequelize.INTEGER,
+    //   quantity: Sequelize.INTEGER,
 });
 export default Cart;
 //# sourceMappingURL=cart.js.map
