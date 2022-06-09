@@ -84,6 +84,7 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
 export const postCart = (req: Request, res: Response, next: NextFunction) => {
   const prodId: string = req.body.productId;
   let fetchedCart: any;
+  let newQuantity = 1;
   req.user
     ?.getCart()
     .then((cart: any) => {
@@ -96,22 +97,23 @@ export const postCart = (req: Request, res: Response, next: NextFunction) => {
       if (products.length > 0) {
         product = products[0];
       }
-      let newQuantity = 1;
+
       if (product) {
         newQuantity = product.cartItem.quantity + 1;
+        return product;
       }
-      return Product.findByPk(prodId)
-        .then((product) => {
-          return fetchedCart.addProduct(product, {
-            through: { quantity: newQuantity },
-          });
-        })
-        .then(() => {
-          res.redirect("/cart");
-        })
-        .catch((err: Error) => {
-          console.log(err);
-        });
+      return Product.findByPk(prodId);
+    })
+    .then((product: any) => {
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQuantity },
+      });
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err: Error) => {
+      console.log(err);
     });
 
   // Product.findById(prodId, (product: ProductType) => {
