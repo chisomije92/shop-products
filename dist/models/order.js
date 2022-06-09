@@ -1,6 +1,6 @@
 import sequelize from "../utils/database.js";
 import Sequelize from "sequelize";
-export const Cart = sequelize.define("cart", {
+export const Order = sequelize.define("order", {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -8,5 +8,5 @@ export const Cart = sequelize.define("cart", {
         autoIncrement: true,
     },
 });
-export default Cart;
-//# sourceMappingURL=cart.js.map
+export default Order;
+//# sourceMappingURL=order.js.map

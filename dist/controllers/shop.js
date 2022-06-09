@@ -107,10 +107,6 @@ export const deleteCartDeleteProduct = (req, res, next) => {
     }).then(() => {
         res.redirect("/cart");
     }).catch((err) => { });
-    // Product.findById(prodId, (product: ProductType) => {
-    //   Cart.deleteProduct(prodId, product.price);
-    //   res.redirect("/cart");
-    // });
 };
 export const getOrders = (req, res, next) => {
     // const products = Product.fetchAll((products: ProductType[]) => {

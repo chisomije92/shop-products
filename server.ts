@@ -9,6 +9,8 @@ import Product from "./models/product.js";
 import User from "./models/user.js";
 import Cart from "./models/cart.js";
 import CartItem from "./models/cart-item.js";
+import Order from "./models/order.js";
+import OrderItem from "./models/order-item.js";
 
 const __dirname = path.resolve();
 const app = express();
@@ -38,9 +40,13 @@ User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, { through: OrderItem });
+Product.belongsToMany(Order, { through: OrderItem });
 
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     return User.findByPk(1);
   })

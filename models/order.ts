@@ -1,12 +1,12 @@
 import sequelize from "../utils/database.js";
 import Sequelize, { Instance } from "sequelize";
 
-export interface CartModelType {
+export interface OrderModelType {
   id: number;
 }
 
-type CartInstance = Instance<CartModelType> & CartModelType;
-export const Cart = sequelize.define<CartInstance, CartModelType>("cart", {
+type CartInstance = Instance<OrderModelType> & OrderModelType;
+export const Order = sequelize.define<CartInstance, OrderModelType>("order", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -15,4 +15,4 @@ export const Cart = sequelize.define<CartInstance, CartModelType>("cart", {
   },
 });
 
-export default Cart;
+export default Order;

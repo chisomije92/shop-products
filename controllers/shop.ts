@@ -137,10 +137,6 @@ export const deleteCartDeleteProduct = (
       res.redirect("/cart");
     })
     .catch((err: Error) => {});
-  // Product.findById(prodId, (product: ProductType) => {
-  //   Cart.deleteProduct(prodId, product.price);
-  //   res.redirect("/cart");
-  // });
 };
 
 export const getOrders = (req: Request, res: Response, next: NextFunction) => {
