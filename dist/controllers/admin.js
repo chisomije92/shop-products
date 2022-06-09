@@ -65,13 +65,17 @@ export const postEditProduct = (req, res, next) => {
     //     .catch((err: any) => {});
 };
 export const getProducts = (req, res, next) => {
-    //   const products = Product.fetchAll((products: ProductType[]) => {
-    //     res.render("admin/products", {
-    //       products,
-    //       pageTitle: "Admin Products",
-    //       path: "/admin/products",
-    //     });
-    //   });
+    Product.findAll()
+        .then((products) => {
+        res.render("admin/products", {
+            products,
+            pageTitle: "Admin Products",
+            path: "/admin/products",
+        });
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 };
 export const postDeleteProduct = (req, res, next) => {
     //   const prodId: string = req.body.productId;
