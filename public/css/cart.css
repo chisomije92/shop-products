@@ -21,3 +21,17 @@
   font-size: 1.2rem;
   margin: 0;
 }
+
+.centered {
+  margin: auto;
+}
+
+.centered button {
+  background-color: rgba(12, 79, 12, 0.87);
+  color: white;
+}
+
+.danger {
+  color: red;
+  border-color: red;
+}

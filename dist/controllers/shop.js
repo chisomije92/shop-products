@@ -109,21 +109,39 @@ export const deleteCartDeleteProduct = (req, res, next) => {
     }).catch((err) => { });
 };
 export const getOrders = (req, res, next) => {
-    // const products = Product.fetchAll((products: ProductType[]) => {
-    //   res.render("shop/orders", {
-    //     products,
-    //     pageTitle: "Your Orders",
-    //     path: "/orders",
-    //   });
-    // });
+    var _a;
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getOrders({ include: ["products"] }).then((orders) => {
+        res.render("shop/orders", {
+            orders: orders,
+            pageTitle: "Your Orders",
+            path: "/orders",
+        });
+    }).catch((err) => {
+        console.log(err);
+    });
 };
-export const getCheckout = (req, res, next) => {
-    // const products = Product.fetchAll((products: ProductType[]) => {
-    //   res.render("shop/checkout", {
-    //     products,
-    //     pageTitle: "Checkout",
-    //     path: "/checkout",
-    //   });
-    // });
+export const postOrder = (req, res, next) => {
+    var _a;
+    let fetchedCart;
+    let duplicatedProducts;
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getCart().then((cart) => {
+        fetchedCart = cart;
+        return cart.getProducts();
+    }).then((products) => {
+        var _a;
+        duplicatedProducts = products;
+        return (_a = req.user) === null || _a === void 0 ? void 0 : _a.createOrder();
+    }).then((order) => {
+        return order.addProducts(duplicatedProducts.map((product) => {
+            product.orderItem = { quantity: product.cartItem.quantity };
+            return product;
+        }));
+    }).then((result) => {
+        fetchedCart.setProducts(null);
+    }).then((result) => {
+        res.redirect("/orders");
+    }).catch((err) => {
+        console.log(err);
+    });
 };
 //# sourceMappingURL=shop.js.map

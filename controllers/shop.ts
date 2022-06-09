@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { CartItemModelType } from "../models/cart-item.js";
-import { Cart, CartModelType } from "../models/cart.js";
+
 import Product, { ProductType } from "../models/product.js";
 
 export const getProducts = (
@@ -140,25 +139,48 @@ export const deleteCartDeleteProduct = (
 };
 
 export const getOrders = (req: Request, res: Response, next: NextFunction) => {
-  // const products = Product.fetchAll((products: ProductType[]) => {
-  //   res.render("shop/orders", {
-  //     products,
-  //     pageTitle: "Your Orders",
-  //     path: "/orders",
-  //   });
-  // });
+  req.user
+    ?.getOrders({ include: ["products"] })
+    .then((orders: any) => {
+      res.render("shop/orders", {
+        orders: orders,
+        pageTitle: "Your Orders",
+        path: "/orders",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
-export const getCheckout = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  // const products = Product.fetchAll((products: ProductType[]) => {
-  //   res.render("shop/checkout", {
-  //     products,
-  //     pageTitle: "Checkout",
-  //     path: "/checkout",
-  //   });
-  // });
+export const postOrder = (req: Request, res: Response, next: NextFunction) => {
+  let fetchedCart: any;
+  let duplicatedProducts: any;
+  req.user
+    ?.getCart()
+    .then((cart: any) => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
+    .then((products: ProductType[]) => {
+      duplicatedProducts = products;
+      return req.user?.createOrder();
+    })
+    .then((order: any) => {
+      return order.addProducts(
+        duplicatedProducts.map((product: any) => {
+          product.orderItem = { quantity: product.cartItem.quantity };
+          return product;
+        })
+      );
+    })
+    .then((result: any) => {
+      fetchedCart.setProducts(null);
+    })
+    .then((result: any) => {
+      res.redirect("/orders");
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
