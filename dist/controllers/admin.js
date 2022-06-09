@@ -7,14 +7,22 @@ export const getAddProduct = (req, res, next) => {
     });
 };
 export const postAddProduct = (req, res, next) => {
-    //   const title: string = req.body.title;
-    //   const imageUrl: string = req.body.imageUrl;
-    //   const price: number = req.body.price;
-    //   const description: string = req.body.description;
-    //   const product = new Product(title, imageUrl, description, price);
-    //   product.save();
-    //   res.redirect("/");
-    //   console.log("postAddProduct");
+    const title = req.body.title;
+    const imageUrl = req.body.imageUrl;
+    const price = req.body.price;
+    const description = req.body.description;
+    Product.create({
+        title,
+        price,
+        imageUrl,
+        description,
+    })
+        .then((product) => {
+        //   console.log(product);
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 };
 export const getEditProduct = (req, res, next) => {
     const editMode = req.query.edit;

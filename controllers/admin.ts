@@ -18,14 +18,22 @@ export const postAddProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  //   const title: string = req.body.title;
-  //   const imageUrl: string = req.body.imageUrl;
-  //   const price: number = req.body.price;
-  //   const description: string = req.body.description;
-  //   const product = new Product(title, imageUrl, description, price);
-  //   product.save();
-  //   res.redirect("/");
-  //   console.log("postAddProduct");
+  const title: string = req.body.title;
+  const imageUrl: string = req.body.imageUrl;
+  const price: number = req.body.price;
+  const description: string = req.body.description;
+  Product.create({
+    title,
+    price,
+    imageUrl,
+    description,
+  })
+    .then((product: ProductType) => {
+      //   console.log(product);
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const getEditProduct = (

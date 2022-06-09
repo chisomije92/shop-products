@@ -1,5 +1,5 @@
 import sequelize from "../utils/database.js";
-import Sequelize from "sequelize";
+import Sequelize, { Instance, Model } from "sequelize";
 
 export interface ProductType {
   id?: string;
@@ -9,7 +9,10 @@ export interface ProductType {
   imageUrl: string;
 }
 
-const Product = sequelize.define("product", {
+type ProductInstance = Instance<ProductType> & ProductType;
+type ProductModel = Model<ProductInstance, ProductType>;
+
+const Product = sequelize.define<ProductInstance, ProductType>("product", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
