@@ -115,11 +115,6 @@ export const postCart = (req: Request, res: Response, next: NextFunction) => {
     .catch((err: Error) => {
       console.log(err);
     });
-
-  // Product.findById(prodId, (product: ProductType) => {
-  //   Cart.addProduct(prodId, product.price);
-  // });
-  // res.redirect("/cart");
 };
 
 export const deleteCartDeleteProduct = (
@@ -128,6 +123,20 @@ export const deleteCartDeleteProduct = (
   next: NextFunction
 ) => {
   const prodId: string = req.body.productId;
+  req.user
+    ?.getCart()
+    .then((cart: any) => {
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then((products: ProductType[]) => {
+      let product: any;
+      product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err: Error) => {});
   // Product.findById(prodId, (product: ProductType) => {
   //   Cart.deleteProduct(prodId, product.price);
   //   res.redirect("/cart");
