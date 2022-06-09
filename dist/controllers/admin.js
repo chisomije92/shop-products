@@ -17,7 +17,7 @@ export const postAddProduct = (req, res, next) => {
         price,
         imageUrl,
         description,
-    }).then((product) => {
+    }).then(() => {
         res.redirect("/admin/products");
     }).catch((err) => {
         console.log(err);
@@ -72,15 +72,14 @@ export const postEditProduct = (req, res, next) => {
     });
 };
 export const getProducts = (req, res, next) => {
-    Product.findAll()
-        .then((products) => {
+    var _a;
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getProducts().then((products) => {
         res.render("admin/products", {
             products,
             pageTitle: "Admin Products",
             path: "/admin/products",
         });
-    })
-        .catch((err) => {
+    }).catch((err) => {
         console.log(err);
     });
 };

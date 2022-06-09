@@ -29,7 +29,7 @@ export const postAddProduct = (
       imageUrl,
       description,
     })
-    .then((product: ProductType) => {
+    .then(() => {
       res.redirect("/admin/products");
     })
     .catch((err: Error) => {
@@ -100,8 +100,9 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  Product.findAll()
-    .then((products) => {
+  req.user
+    ?.getProducts()
+    .then((products: ProductType) => {
       res.render("admin/products", {
         products,
         pageTitle: "Admin Products",
