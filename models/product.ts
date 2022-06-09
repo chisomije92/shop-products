@@ -10,7 +10,7 @@ export interface ProductType {
 }
 
 type ProductInstance = Instance<ProductType> & ProductType;
-type ProductModel = Model<ProductInstance, ProductType>;
+// type ProductModel = Model<ProductInstance, ProductType>;
 
 const Product = sequelize.define<ProductInstance, ProductType>("product", {
   id: {

@@ -1,5 +1,6 @@
 import sequelize from "../utils/database.js";
 import Sequelize from "sequelize";
+// type ProductModel = Model<ProductInstance, ProductType>;
 const Product = sequelize.define("product", {
     id: {
         type: Sequelize.INTEGER,
