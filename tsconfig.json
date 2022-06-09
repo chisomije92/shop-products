@@ -97,6 +97,8 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-    "typeRoots": ["node_modules/@types", "src/typings"]
+    "typeRoots": [
+      "node_modules/@types"
+    ] /* Specify the location where the type definitions are located. */
   }
 }

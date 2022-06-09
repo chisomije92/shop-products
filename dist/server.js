@@ -15,14 +15,32 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use((req, res, next) => {
+    User.findByPk(1).then((user) => {
+        req.user = user;
+        next();
+    });
+});
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(get404Page);
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 sequelize
-    .sync({ force: true })
+    .sync()
     .then(() => {
+    return User.findByPk(1);
+})
+    .then((user) => {
+    if (!user) {
+        return User.create({
+            name: "Jerry",
+            email: "test@test.com",
+        });
+    }
+    return user;
+})
+    .then((user) => {
     app.listen(3000);
 })
     .catch((err) => {
