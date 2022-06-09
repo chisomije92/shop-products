@@ -7,15 +7,17 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  // const products = Product.fetchAll()
-  //   .then(([row]) => {
-  //     res.render("shop/product-list", {
-  //       products: row,
-  //       pageTitle: "All Products",
-  //       path: "/products",
-  //     });
-  //   })
-  //   .catch((err) => {});
+  Product.findAll()
+    .then((products) => {
+      res.render("shop/product-list", {
+        products: products,
+        pageTitle: "All Products",
+        path: "/products",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const getProduct = (req: Request, res: Response, next: NextFunction) => {
@@ -30,15 +32,17 @@ export const getProduct = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getIndex = (req: Request, res: Response, next: NextFunction) => {
-  // const products = Product.fetchAll()
-  //   .then(([rows]) => {
-  //     res.render("shop/index", {
-  //       pageTitle: "Shop",
-  //       path: "/",
-  //       products: rows,
-  //     });
-  //   })
-  //   .catch();
+  Product.findAll()
+    .then((products) => {
+      res.render("shop/index", {
+        products: products,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
