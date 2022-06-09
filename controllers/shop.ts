@@ -21,14 +21,29 @@ export const getProducts = (
 };
 
 export const getProduct = (req: Request, res: Response, next: NextFunction) => {
-  // const prodId = req.params.productId;
-  // Product.findById(prodId).then(([row]) => {
-  //   res.render("shop/product-detail", {
-  //     product: row[0],
-  //     pageTitle: row[0].title,
-  //     path: "/products",
+  const prodId = req.params.productId;
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((products) => {
+  //     res.render("shop/product-detail", {
+  //       product: products[0],
+  //       pageTitle: products[0]?.title,
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log(err);
   //   });
-  // });
+  Product.findByPk(prodId)
+    .then((product) => {
+      res.render("shop/product-detail", {
+        product: product,
+        pageTitle: product?.title,
+        path: "/products",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const getIndex = (req: Request, res: Response, next: NextFunction) => {

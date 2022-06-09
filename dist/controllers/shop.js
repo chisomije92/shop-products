@@ -13,14 +13,29 @@ export const getProducts = (req, res, next) => {
     });
 };
 export const getProduct = (req, res, next) => {
-    // const prodId = req.params.productId;
-    // Product.findById(prodId).then(([row]) => {
-    //   res.render("shop/product-detail", {
-    //     product: row[0],
-    //     pageTitle: row[0].title,
-    //     path: "/products",
+    const prodId = req.params.productId;
+    // Product.findAll({ where: { id: prodId } })
+    //   .then((products) => {
+    //     res.render("shop/product-detail", {
+    //       product: products[0],
+    //       pageTitle: products[0]?.title,
+    //       path: "/products",
+    //     });
+    //   })
+    //   .catch((err: Error) => {
+    //     console.log(err);
     //   });
-    // });
+    Product.findByPk(prodId)
+        .then((product) => {
+        res.render("shop/product-detail", {
+            product: product,
+            pageTitle: product === null || product === void 0 ? void 0 : product.title,
+            path: "/products",
+        });
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 };
 export const getIndex = (req, res, next) => {
     Product.findAll()
