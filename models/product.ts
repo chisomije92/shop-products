@@ -1,5 +1,13 @@
-import sequelize from "../utils/database";
+import sequelize from "../utils/database.js";
 import Sequelize from "sequelize";
+
+export interface ProductType {
+  id?: string;
+  title: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+}
 
 const Product = sequelize.define("product", {
   id: {

@@ -1,35 +1,34 @@
-import { Product } from "../models/product.js";
 export const getProducts = (req, res, next) => {
-    const products = Product.fetchAll()
-        .then(([row]) => {
-        res.render("shop/product-list", {
-            products: row,
-            pageTitle: "All Products",
-            path: "/products",
-        });
-    })
-        .catch((err) => { });
+    // const products = Product.fetchAll()
+    //   .then(([row]) => {
+    //     res.render("shop/product-list", {
+    //       products: row,
+    //       pageTitle: "All Products",
+    //       path: "/products",
+    //     });
+    //   })
+    //   .catch((err) => {});
 };
 export const getProduct = (req, res, next) => {
-    const prodId = req.params.productId;
-    Product.findById(prodId).then(([row]) => {
-        res.render("shop/product-detail", {
-            product: row[0],
-            pageTitle: row[0].title,
-            path: "/products",
-        });
-    });
+    // const prodId = req.params.productId;
+    // Product.findById(prodId).then(([row]) => {
+    //   res.render("shop/product-detail", {
+    //     product: row[0],
+    //     pageTitle: row[0].title,
+    //     path: "/products",
+    //   });
+    // });
 };
 export const getIndex = (req, res, next) => {
-    const products = Product.fetchAll()
-        .then(([rows]) => {
-        res.render("shop/index", {
-            pageTitle: "Shop",
-            path: "/",
-            products: rows,
-        });
-    })
-        .catch();
+    // const products = Product.fetchAll()
+    //   .then(([rows]) => {
+    //     res.render("shop/index", {
+    //       pageTitle: "Shop",
+    //       path: "/",
+    //       products: rows,
+    //     });
+    //   })
+    //   .catch();
 };
 export const getCart = (req, res, next) => {
     // const products = Product.fetchAll((products: ProductType[]) => {

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Product, ProductType } from "../models/product.js";
+import Product, { ProductType } from "../models/product.js";
 
 export const getAddProduct = (
   req: Request,
@@ -18,14 +18,14 @@ export const postAddProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  const title: string = req.body.title;
-  const imageUrl: string = req.body.imageUrl;
-  const price: number = req.body.price;
-  const description: string = req.body.description;
-  const product = new Product(title, imageUrl, description, price);
-  product.save();
-  res.redirect("/");
-  console.log("postAddProduct");
+  //   const title: string = req.body.title;
+  //   const imageUrl: string = req.body.imageUrl;
+  //   const price: number = req.body.price;
+  //   const description: string = req.body.description;
+  //   const product = new Product(title, imageUrl, description, price);
+  //   product.save();
+  //   res.redirect("/");
+  //   console.log("postAddProduct");
 };
 
 export const getEditProduct = (
@@ -64,19 +64,19 @@ export const postEditProduct = (
   const updatedPrice: number = req.body.price;
   const updatedImageUrl: string = req.body.imageUrl;
   const updatedDescription: string = req.body.description;
-  const updatedProduct = new Product(
-    updatedTitle,
-    updatedImageUrl,
-    updatedDescription,
-    updatedPrice,
-    prodId
-  );
-  updatedProduct
-    .save()
-    .then(() => {
-      res.redirect("/admin/products");
-    })
-    .catch((err: any) => {});
+  //   const updatedProduct = new Product(
+  //     updatedTitle,
+  //     updatedImageUrl,
+  //     updatedDescription,
+  //     updatedPrice,
+  //     prodId
+  //   );
+  //   updatedProduct
+  //     .save()
+  //     .then(() => {
+  //       res.redirect("/admin/products");
+  //     })
+  //     .catch((err: any) => {});
 };
 
 export const getProducts = (
@@ -98,7 +98,7 @@ export const postDeleteProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  const prodId: string = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect("/admin/products");
+  //   const prodId: string = req.body.productId;
+  //   Product.deleteById(prodId);
+  //   res.redirect("/admin/products");
 };

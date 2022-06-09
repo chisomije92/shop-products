@@ -1,4 +1,4 @@
-import sequelize from "../utils/database";
+import sequelize from "../utils/database.js";
 import Sequelize from "sequelize";
 const Product = sequelize.define("product", {
     id: {
