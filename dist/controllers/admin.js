@@ -7,20 +7,19 @@ export const getAddProduct = (req, res, next) => {
     });
 };
 export const postAddProduct = (req, res, next) => {
+    var _a;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    Product.create({
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.createProduct({
         title,
         price,
         imageUrl,
         description,
-    })
-        .then((product) => {
+    }).then((product) => {
         res.redirect("/admin/products");
-    })
-        .catch((err) => {
+    }).catch((err) => {
         console.log(err);
     });
 };

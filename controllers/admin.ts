@@ -22,13 +22,14 @@ export const postAddProduct = (
   const imageUrl: string = req.body.imageUrl;
   const price: number = req.body.price;
   const description: string = req.body.description;
-  Product.create({
-    title,
-    price,
-    imageUrl,
-    description,
-  })
-    .then((product) => {
+  req.user
+    ?.createProduct({
+      title,
+      price,
+      imageUrl,
+      description,
+    })
+    .then((product: ProductType) => {
       res.redirect("/admin/products");
     })
     .catch((err: Error) => {
