@@ -1,52 +1,26 @@
-import { Cart } from "./cart.js";
-import { RowDataPacket } from "mysql2";
-import db from "../utils/database.js";
+import sequelize from "../utils/database";
+import Sequelize from "sequelize";
 
-export interface ProductType {
-  id?: string;
-  title: string;
-  price: number;
-  description: string;
-  imageUrl: string;
-}
+const Product = sequelize.define("product", {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  title: Sequelize.STRING,
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false,
+  },
+  imageUrl: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
 
-export class Product {
-  id?: string;
-  title: string;
-  imageUrl: string;
-  description: string;
-  price: number;
-  constructor(
-    title: string,
-    imageUrl: string,
-    description: string,
-    price: number,
-    id?: string
-  ) {
-    this.id = id;
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
-  }
-
-  save() {
-    return db.execute(
-      "INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)",
-      [this.title, this.price, this.imageUrl, this.description]
-    );
-  }
-
-  static deleteById(id: string) {}
-
-  static fetchAll() {
-    return db.execute("SELECT * FROM products");
-  }
-
-  static findById(id: string) {
-    return db.query<RowDataPacket[]>(
-      "SELECT * FROM products WHERE products.id = ?",
-      [id]
-    );
-  }
-}
+export default Product;
