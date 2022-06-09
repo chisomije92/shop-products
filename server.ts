@@ -5,6 +5,8 @@ import shopRoute from "./routes/shop.js";
 import path from "path";
 import { get404Page } from "./controllers/404.js";
 import sequelize from "./utils/database.js";
+import Product from "./models/product.js";
+import User from "./models/user.js";
 
 const __dirname = path.resolve();
 const app = express();
@@ -21,8 +23,11 @@ app.use(shopRoute);
 
 app.use(get404Page);
 
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
 sequelize
-  .sync()
+  .sync({ force: true })
   .then(() => {
     app.listen(3000);
   })
