@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { Cart, CartType } from "../models/cart.js";
 import Product, { ProductType } from "../models/product.js";
 
 export const getProducts = (

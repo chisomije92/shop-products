@@ -7,6 +7,8 @@ import { get404Page } from "./controllers/404.js";
 import sequelize from "./utils/database.js";
 import Product from "./models/product.js";
 import User from "./models/user.js";
+import Cart from "./models/cart.js";
+import CartItem from "./models/cart-item.js";
 
 const __dirname = path.resolve();
 const app = express();
@@ -32,6 +34,10 @@ app.use(get404Page);
 
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: "cartItem" });
+Product.belongsToMany(Cart, { through: "cartItem" });
 
 sequelize
   .sync()
