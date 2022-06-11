@@ -96,9 +96,16 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    //"skipLibCheck": true /* Skip type checking all .d.ts files. */,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "node_modules/mongodb/mongodb.d.ts"
     ] /* Specify the location where the type definitions are located. */
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.db.ts",
+    "/types"
+  ] /* Specify a list of files to be excluded from compilation. */
 }

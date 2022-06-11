@@ -5,7 +5,7 @@ export interface CartModelType {
   id: number;
 }
 
-type CartInstance = Instance<CartModelType> & CartModelType;
+export type CartInstance = Instance<CartModelType> & CartModelType;
 export const Cart = sequelize.define<CartInstance, CartModelType>("cart", {
   id: {
     type: Sequelize.INTEGER,
