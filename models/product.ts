@@ -1,5 +1,5 @@
 import mongoConnect, { getDb } from "../utils/database.js";
-
+import mongodb from "mongodb";
 export interface ProductType {
   id?: string;
   title: string;
@@ -49,6 +49,21 @@ class Product {
       .then((products) => {
         console.log(products);
         return products;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  static findById(prodId: string) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find({ _id: new mongodb.ObjectId(prodId) })
+      .next()
+      .then((product) => {
+        console.log(product);
+        return product;
       })
       .catch((err) => {
         console.log(err);
