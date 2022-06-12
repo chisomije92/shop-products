@@ -22,13 +22,18 @@ export const postAddProduct = (
   const imageUrl: string = req.body.imageUrl;
   const price: number = req.body.price;
   const description: string = req.body.description;
-  req.user
-    ?.createProduct({
-      title,
-      price,
-      imageUrl,
-      description,
-    })
+
+  // req.user
+  //   ?.createProduct({
+  //     title,
+  //     price,
+  //     imageUrl,
+  //     description,
+  //   })
+  const product = new Product(title, price, description, imageUrl);
+
+  product
+    .save()
     .then(() => {
       res.redirect("/admin/products");
     })
@@ -46,22 +51,22 @@ export const getEditProduct = (
   if (!editMode) {
     return res.redirect("/");
   }
-  const prodId = req.params.productId;
-  Product.findByPk(prodId)
-    .then((product) => {
-      if (!product) {
-        return res.redirect("/");
-      }
-      res.render("admin/edit-product", {
-        pageTitle: "Edit Product",
-        path: "/admin/edit-product",
-        editing: editMode,
-        product,
-      });
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+  // const prodId = req.params.productId;
+  // Product.findByPk(prodId)
+  //   .then((product) => {
+  //     if (!product) {
+  //       return res.redirect("/");
+  //     }
+  //     res.render("admin/edit-product", {
+  //       pageTitle: "Edit Product",
+  //       path: "/admin/edit-product",
+  //       editing: editMode,
+  //       product,
+  //     });
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log(err);
+  //   });
 };
 
 export const postEditProduct = (
@@ -74,25 +79,25 @@ export const postEditProduct = (
   const updatedPrice: number = req.body.price;
   const updatedImageUrl: string = req.body.imageUrl;
   const updatedDescription: string = req.body.description;
-  Product.findByPk(prodId)
-    .then((product) => {
-      if (!product) {
-        return res.redirect("/");
-      }
-      product
-        .update({
-          title: updatedTitle,
-          price: updatedPrice,
-          imageUrl: updatedImageUrl,
-          description: updatedDescription,
-        })
-        .then((result) => {
-          res.redirect("/admin/products");
-        });
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+  // Product.findByPk(prodId)
+  //   .then((product) => {
+  //     if (!product) {
+  //       return res.redirect("/");
+  //     }
+  //     product
+  //       .update({
+  //         title: updatedTitle,
+  //         price: updatedPrice,
+  //         imageUrl: updatedImageUrl,
+  //         description: updatedDescription,
+  //       })
+  //       .then((result) => {
+  //         res.redirect("/admin/products");
+  //       });
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log(err);
+  //   });
 };
 
 export const getProducts = (
@@ -100,18 +105,18 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  req.user
-    ?.getProducts()
-    .then((products: ProductType) => {
-      res.render("admin/products", {
-        products,
-        pageTitle: "Admin Products",
-        path: "/admin/products",
-      });
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+  // req.user
+  //   ?.getProducts()
+  //   .then((products: ProductType) => {
+  //     res.render("admin/products", {
+  //       products: [],
+  //       pageTitle: "Admin Products",
+  //       path: "/admin/products",
+  //     });
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log(err);
+  //   });
 };
 
 export const postDeleteProduct = (
@@ -128,14 +133,14 @@ export const postDeleteProduct = (
   //     res.redirect("/admin/products");
   //   });
 
-  Product.findByPk(prodId)
-    .then((product) => {
-      return product?.destroy();
-    })
-    .then(() => {
-      res.redirect("/admin/products");
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+  // Product.findByPk(prodId)
+  //   .then((product) => {
+  //     return product?.destroy();
+  //   })
+  //   .then(() => {
+  //     res.redirect("/admin/products");
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log(err);
+  //   });
 };

@@ -23,19 +23,18 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use((req, res, next) => {
-//   User.findByPk(1).then((user) => {
-//     req.user = user;
-//     next();
-//   });
-// });
+app.use((req, res, next) => {
+  // User.findByPk(1).then((user) => {
+  //   req.user = user;
+  next();
+  // });
+});
 
-// app.use("/admin", adminRoute);
+app.use("/admin", adminRoute);
 // app.use(shopRoute);
 
 // app.use(get404Page);
 
-mongoConnect((client) => {
-  console.log(client);
+mongoConnect(() => {
   app.listen(3000);
 });

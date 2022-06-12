@@ -1,7 +1,8 @@
-import mongodb from "../mongodb";
+import mongodb from "mongodb";
 import { MongoClient } from "mongodb";
-import process from "process";
+
 import dotenv from "dotenv";
+
 dotenv.config();
 
 console.log(process.env.Mongo_CONN_STRING);
@@ -13,15 +14,25 @@ if (process.env.MONGO_CONN_STRING) {
   throw new Error("MONGO_CONN_STRING is not set");
 }
 
-const mongoConnect = (cb: (result: any) => void) => {
+let _db: mongodb.Db | null;
+
+const mongoConnect = (cb: () => void) => {
   MongoClient.connect(conn_string)
     .then((client) => {
-      console.log("connect");
-      cb(client);
+      _db = client.db();
+      cb();
     })
     .catch((err) => {
       console.log(err);
+      throw err;
     });
+};
+
+export const getDb = () => {
+  if (_db) {
+    return _db;
+  }
+  throw new Error("No database found. Please connect first.");
 };
 
 export default mongoConnect;

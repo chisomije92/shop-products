@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import adminRoute from "./routes/admin.js";
 import path from "path";
 import mongoConnect from "./utils/database.js";
 // import sequelize from "./utils/database.js";
@@ -17,17 +18,16 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-// app.use((req, res, next) => {
-//   User.findByPk(1).then((user) => {
-//     req.user = user;
-//     next();
-//   });
-// });
-// app.use("/admin", adminRoute);
+app.use((req, res, next) => {
+    // User.findByPk(1).then((user) => {
+    //   req.user = user;
+    next();
+    // });
+});
+app.use("/admin", adminRoute);
 // app.use(shopRoute);
 // app.use(get404Page);
-mongoConnect((client) => {
-    console.log(client);
+mongoConnect(() => {
     app.listen(3000);
 });
 //# sourceMappingURL=server.js.map

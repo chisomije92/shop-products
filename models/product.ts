@@ -1,5 +1,4 @@
-import sequelize from "../utils/database.js";
-import Sequelize, { Instance, Model } from "sequelize";
+import mongoConnect, { getDb } from "../utils/database.js";
 
 export interface ProductType {
   id?: string;
@@ -9,29 +8,37 @@ export interface ProductType {
   imageUrl: string;
 }
 
-type ProductInstance = Instance<ProductType> & ProductType;
-// type ProductModel = Model<ProductInstance, ProductType>;
+class Product {
+  id?: string;
+  title: string;
+  price: number;
+  description: string;
+  imageUrl: string;
 
-const Product = sequelize.define<ProductInstance, ProductType>("product", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  title: Sequelize.STRING,
-  price: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-  },
-  imageUrl: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
+  constructor(
+    title: string,
+    price: number,
+    description: string,
+    imageUrl: string
+  ) {
+    this.title = title;
+    this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
+  }
+
+  save() {
+    const db = getDb();
+    return db
+      .collection("products")
+      .insertOne(this)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+}
 
 export default Product;
