@@ -1,21 +1,32 @@
-import Sequelize, { Instance } from "sequelize";
-import sequelize from "../utils/database.js";
+import { ObjectId } from "mongodb";
+import { getDb } from "../utils/database.js";
 
 export interface UserType {
   id?: string;
   name: string;
   email: string;
 }
-type UserInstance = Instance<UserType> & UserType;
-const User = sequelize.define<UserInstance, UserType>("user", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  name: Sequelize.STRING,
-  email: Sequelize.STRING,
-});
+
+class User {
+  // _id?: ObjectId;
+  name: string;
+  email: string;
+
+  constructor(name: string, email: string) {
+    this.name = name;
+    this.email = email;
+    // this._id = id;
+  }
+
+  save() {
+    const db = getDb();
+    return db.collection("users").insertOne(this);
+  }
+
+  static findById(userId: string) {
+    const db = getDb();
+    return db.collection("users").findOne({ _id: new ObjectId(userId) });
+  }
+}
 
 export default User;

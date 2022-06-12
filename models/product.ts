@@ -1,5 +1,5 @@
-import mongoConnect, { getDb } from "../utils/database.js";
-import mongodb, { ObjectId } from "mongodb";
+import { getDb } from "../utils/database.js";
+import { ObjectId } from "mongodb";
 export interface ProductType {
   _id?: string;
   title: string;
@@ -10,6 +10,7 @@ export interface ProductType {
 
 class Product {
   _id?: ObjectId;
+  userId: ObjectId;
   title: string;
   price: number;
   description: string;
@@ -20,12 +21,14 @@ class Product {
     price: number,
     description: string,
     imageUrl: string,
+    userId: string,
     id?: string
   ) {
     this.title = title;
     this.price = price;
     this.description = description;
     this.imageUrl = imageUrl;
+    this.userId = new ObjectId(userId);
     this._id = id ? new ObjectId(id) : undefined;
   }
 

@@ -7,6 +7,7 @@ export const getAddProduct = (req, res, next) => {
     });
 };
 export const postAddProduct = (req, res, next) => {
+    var _a;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
@@ -18,7 +19,7 @@ export const postAddProduct = (req, res, next) => {
     //     imageUrl,
     //     description,
     //   })
-    const product = new Product(title, price, description, imageUrl);
+    const product = new Product(title, price, description, imageUrl, (_a = req.user) === null || _a === void 0 ? void 0 : _a._id);
     product
         .save()
         .then(() => {
@@ -51,12 +52,13 @@ export const getEditProduct = (req, res, next) => {
     });
 };
 export const postEditProduct = (req, res, next) => {
+    var _a;
     const prodId = req.body.productId;
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
     const updatedDescription = req.body.description;
-    const product = new Product(updatedTitle, updatedPrice, updatedDescription, updatedImageUrl, prodId);
+    const product = new Product(updatedTitle, updatedPrice, updatedDescription, updatedImageUrl, (_a = req.user) === null || _a === void 0 ? void 0 : _a._id, prodId);
     product.save().then((product) => {
         res.redirect("/admin/products");
     });

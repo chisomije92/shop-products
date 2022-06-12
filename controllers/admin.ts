@@ -31,7 +31,13 @@ export const postAddProduct = (
   //     imageUrl,
   //     description,
   //   })
-  const product = new Product(title, price, description, imageUrl);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageUrl,
+    req.user?._id
+  );
 
   product
     .save()
@@ -86,6 +92,7 @@ export const postEditProduct = (
     updatedPrice,
     updatedDescription,
     updatedImageUrl,
+    req.user?._id,
     prodId
   );
   product.save().then((product) => {
