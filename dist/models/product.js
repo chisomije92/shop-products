@@ -6,7 +6,7 @@ class Product {
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
-        this._id = id;
+        this._id = id ? new ObjectId(id) : undefined;
     }
     save() {
         const db = getDb();
@@ -34,7 +34,6 @@ class Product {
             .find()
             .toArray()
             .then((products) => {
-            console.log(products);
             return products;
         })
             .catch((err) => {
@@ -50,6 +49,18 @@ class Product {
             .then((product) => {
             console.log(product);
             return product;
+        })
+            .catch((err) => {
+            console.log(err);
+        });
+    }
+    static deleteById(prodId) {
+        const db = getDb();
+        return db
+            .collection("products")
+            .deleteOne({ _id: new ObjectId(prodId) })
+            .then((result) => {
+            console.log(result);
         })
             .catch((err) => {
             console.log(err);

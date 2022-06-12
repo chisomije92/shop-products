@@ -75,7 +75,7 @@ export const postEditProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  const prodId: ObjectId = req.body.productId;
+  const prodId: string = req.body.productId;
   const updatedTitle: string = req.body.title;
   const updatedPrice: number = req.body.price;
   const updatedImageUrl: string = req.body.imageUrl;
@@ -86,7 +86,7 @@ export const postEditProduct = (
     updatedPrice,
     updatedDescription,
     updatedImageUrl,
-    new ObjectId(prodId)
+    prodId
   );
   product.save().then((product) => {
     res.redirect("/admin/products");
@@ -139,14 +139,11 @@ export const postDeleteProduct = (
   //     res.redirect("/admin/products");
   //   });
 
-  // Product.findByPk(prodId)
-  //   .then((product) => {
-  //     return product?.destroy();
-  //   })
-  //   .then(() => {
-  //     res.redirect("/admin/products");
-  //   })
-  //   .catch((err: Error) => {
-  //     console.log(err);
-  //   });
+  Product.deleteById(prodId)
+    .then(() => {
+      res.redirect("/admin/products");
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };

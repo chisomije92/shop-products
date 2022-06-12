@@ -1,7 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
-console.log(process.env.Mongo_CONN_STRING);
 let conn_string;
 if (process.env.MONGO_CONN_STRING) {
     conn_string = process.env.MONGO_CONN_STRING;

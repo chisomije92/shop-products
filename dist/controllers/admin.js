@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import Product from "../models/product.js";
 export const getAddProduct = (req, res, next) => {
     res.render("admin/edit-product", {
@@ -57,7 +56,7 @@ export const postEditProduct = (req, res, next) => {
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
     const updatedDescription = req.body.description;
-    const product = new Product(updatedTitle, updatedPrice, updatedDescription, updatedImageUrl, new ObjectId(prodId));
+    const product = new Product(updatedTitle, updatedPrice, updatedDescription, updatedImageUrl, prodId);
     product.save().then((product) => {
         res.redirect("/admin/products");
     });
@@ -98,15 +97,12 @@ export const postDeleteProduct = (req, res, next) => {
     //   }).then(() => {
     //     res.redirect("/admin/products");
     //   });
-    // Product.findByPk(prodId)
-    //   .then((product) => {
-    //     return product?.destroy();
-    //   })
-    //   .then(() => {
-    //     res.redirect("/admin/products");
-    //   })
-    //   .catch((err: Error) => {
-    //     console.log(err);
-    //   });
+    Product.deleteById(prodId)
+        .then(() => {
+        res.redirect("/admin/products");
+    })
+        .catch((err) => {
+        console.log(err);
+    });
 };
 //# sourceMappingURL=admin.js.map
