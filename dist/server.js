@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import adminRoute from "./routes/admin.js";
+import shopRoute from "./routes/shop.js";
 import path from "path";
 import mongoConnect from "./utils/database.js";
 // import sequelize from "./utils/database.js";
@@ -25,7 +26,7 @@ app.use((req, res, next) => {
     // });
 });
 app.use("/admin", adminRoute);
-// app.use(shopRoute);
+app.use(shopRoute);
 // app.use(get404Page);
 mongoConnect(() => {
     app.listen(3000);

@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/admin", adminRoute);
-// app.use(shopRoute);
+app.use(shopRoute);
 
 // app.use(get404Page);
 
