@@ -105,18 +105,17 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  // req.user
-  //   ?.getProducts()
-  //   .then((products: ProductType) => {
-  //     res.render("admin/products", {
-  //       products: [],
-  //       pageTitle: "Admin Products",
-  //       path: "/admin/products",
-  //     });
-  //   })
-  //   .catch((err: Error) => {
-  //     console.log(err);
-  //   });
+  Product.fetchAll()
+    .then((products) => {
+      res.render("admin/products", {
+        products: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const postDeleteProduct = (
