@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 import Product, { ProductType } from "../models/product.js";
 
 export const getAddProduct = (
@@ -74,16 +75,22 @@ export const postEditProduct = (
   res: Response,
   next: NextFunction
 ) => {
-  const prodId: string = req.body.productId;
+  const prodId: ObjectId = req.body.productId;
   const updatedTitle: string = req.body.title;
   const updatedPrice: number = req.body.price;
   const updatedImageUrl: string = req.body.imageUrl;
   const updatedDescription: string = req.body.description;
-  // Product.findByPk(prodId)
-  //   .then((product) => {
-  //     if (!product) {
-  //       return res.redirect("/");
-  //     }
+
+  const product = new Product(
+    updatedTitle,
+    updatedPrice,
+    updatedDescription,
+    updatedImageUrl,
+    new ObjectId(prodId)
+  );
+  product.save().then((product) => {
+    res.redirect("/admin/products");
+  });
   //     product
   //       .update({
   //         title: updatedTitle,
