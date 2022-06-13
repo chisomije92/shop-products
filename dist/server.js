@@ -8,6 +8,7 @@ import mongoConnect from "./utils/database.js";
 // import sequelize from "./utils/database.js";
 // import Product from "./models/product.js";
 import User from "./models/user.js";
+import { ObjectId } from "mongodb";
 // import Cart from "./models/cart.js";
 // import CartItem from "./models/cart-item.js";
 // import Order from "./models/order.js";
@@ -23,7 +24,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
     User.findById("62a61389040805c6c5c61f32")
         .then((user) => {
-        req.user = user;
+        // const userId = new ObjectId(user?._id);
+        req.user = new User(user === null || user === void 0 ? void 0 : user.name, user === null || user === void 0 ? void 0 : user.email, new ObjectId(user === null || user === void 0 ? void 0 : user._id), user === null || user === void 0 ? void 0 : user.cart);
         next();
     })
         .catch((err) => {

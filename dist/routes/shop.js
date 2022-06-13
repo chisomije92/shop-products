@@ -1,9 +1,9 @@
 import express from "express";
-import { getIndex, getProduct, getProducts, } from "../controllers/shop.js";
+import { getIndex, getProduct, getProducts, postCart, } from "../controllers/shop.js";
 const router = express.Router();
 router.get("/", getIndex);
 // router.get("/cart", getCart);
-// router.post("/cart", postCart);
+router.post("/cart", postCart);
 // router.post("/create-order", postOrder);
 // router.post("/cart-delete-item", deleteCartDeleteProduct);
 router.get("/products", getProducts);

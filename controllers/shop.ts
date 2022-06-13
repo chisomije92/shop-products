@@ -71,8 +71,15 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
 
 export const postCart = (req: Request, res: Response, next: NextFunction) => {
   const prodId: string = req.body.productId;
-  let fetchedCart: any;
-  let newQuantity = 1;
+  Product.findById(prodId)
+    .then((product) => {
+      return req.user?.addToCart(product);
+    })
+    .then((result) => {
+      console.log(result);
+    });
+  // let fetchedCart: any;
+  // let newQuantity = 1;
   // req.user
   //   ?.getCart()
   //   .then((cart: any) => {

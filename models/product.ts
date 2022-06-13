@@ -1,7 +1,7 @@
 import { getDb } from "../utils/database.js";
 import { ObjectId } from "mongodb";
 export interface ProductType {
-  _id?: string;
+  _id?: ObjectId;
   title: string;
   price: number;
   description: string;
