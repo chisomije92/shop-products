@@ -76,7 +76,7 @@ export const postCart = (req: Request, res: Response, next: NextFunction) => {
       return req.user?.addToCart(product);
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
     });
   // let fetchedCart: any;
   // let newQuantity = 1;
