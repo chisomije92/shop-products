@@ -108,7 +108,7 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const postOrder = (req: Request, res: Response, next: NextFunction) => {
-  req.user?.addOrders().then(() => {
+  req.user?.addOrder().then(() => {
     res.redirect("/orders");
   });
 };

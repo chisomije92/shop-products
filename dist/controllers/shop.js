@@ -86,7 +86,7 @@ export const getOrders = (req, res, next) => {
 };
 export const postOrder = (req, res, next) => {
     var _a;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.addOrders().then(() => {
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.addOrder().then(() => {
         res.redirect("/orders");
     });
 };
