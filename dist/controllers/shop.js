@@ -58,39 +58,9 @@ export const postCart = (req, res, next) => {
         var _a;
         return (_a = req.user) === null || _a === void 0 ? void 0 : _a.addToCart(product);
     })
-        .then((result) => {
-        // console.log(result);
+        .then(() => {
+        res.redirect("/cart");
     });
-    // let fetchedCart: any;
-    // let newQuantity = 1;
-    // req.user
-    //   ?.getCart()
-    //   .then((cart: any) => {
-    //     fetchedCart = cart;
-    //     return cart.getProducts({ where: { id: prodId } });
-    //   })
-    //   .then((products: ProductType[]) => {
-    //     let product: any;
-    //     if (products.length > 0) {
-    //       product = products[0];
-    //     }
-    //     if (product) {
-    //       newQuantity = product.cartItem.quantity + 1;
-    //       return product;
-    //     }
-    //     return Product.findByPk(prodId);
-    //   })
-    //   .then((product: any) => {
-    //     return fetchedCart.addProduct(product, {
-    //       through: { quantity: newQuantity },
-    //     });
-    //   })
-    //   .then(() => {
-    //     res.redirect("/cart");
-    //   })
-    //   .catch((err: Error) => {
-    //     console.log(err);
-    //   });
 };
 export const deleteCartDeleteProduct = (req, res, next) => {
     var _a;
