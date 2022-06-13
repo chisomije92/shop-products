@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 
 import Product, { ProductType } from "../models/product.js";
 
@@ -75,26 +76,20 @@ export const postCart = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-export const deleteCartDeleteProduct = (
+export const deleteCartProduct = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const prodId: string = req.body.productId;
   req.user
-    ?.getCart()
-    .then((cart: any) => {
-      return cart.getProducts({ where: { id: prodId } });
-    })
-    .then((products: ProductType[]) => {
-      let product: any;
-      product = products[0];
-      return product.cartItem.destroy();
-    })
+    ?.deleteItemFromCart(new ObjectId(prodId))
     .then(() => {
       res.redirect("/cart");
     })
-    .catch((err: Error) => {});
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const getOrders = (req: Request, res: Response, next: NextFunction) => {

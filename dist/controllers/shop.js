@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import Product from "../models/product.js";
 export const getProducts = (req, res, next) => {
     Product.fetchAll()
@@ -62,18 +63,14 @@ export const postCart = (req, res, next) => {
         res.redirect("/cart");
     });
 };
-export const deleteCartDeleteProduct = (req, res, next) => {
+export const deleteCartProduct = (req, res, next) => {
     var _a;
     const prodId = req.body.productId;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getCart().then((cart) => {
-        return cart.getProducts({ where: { id: prodId } });
-    }).then((products) => {
-        let product;
-        product = products[0];
-        return product.cartItem.destroy();
-    }).then(() => {
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.deleteItemFromCart(new ObjectId(prodId)).then(() => {
         res.redirect("/cart");
-    }).catch((err) => { });
+    }).catch((err) => {
+        console.log(err);
+    });
 };
 export const getOrders = (req, res, next) => {
     var _a;

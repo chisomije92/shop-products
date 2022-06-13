@@ -1,7 +1,7 @@
 import express from "express";
 
 import {
-  deleteCartDeleteProduct,
+  deleteCartProduct,
   getCart,
   getIndex,
   getOrders,
@@ -17,7 +17,7 @@ router.get("/", getIndex);
 router.get("/cart", getCart);
 router.post("/cart", postCart);
 // router.post("/create-order", postOrder);
-// router.post("/cart-delete-item", deleteCartDeleteProduct);
+router.post("/cart-delete-item", deleteCartProduct);
 router.get("/products", getProducts);
 router.get("/products/:productId", getProduct);
 // router.get("/orders", getOrders);
