@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
 import Product, { ProductType } from "../models/product.js";
 
@@ -94,7 +94,7 @@ export const deleteCartProduct = (
 
 export const getOrders = (req: Request, res: Response, next: NextFunction) => {
   req.user
-    ?.getOrders({ include: ["products"] })
+    ?.getOrders()
     .then((orders: any) => {
       res.render("shop/orders", {
         orders: orders,

@@ -74,7 +74,7 @@ export const deleteCartProduct = (req, res, next) => {
 };
 export const getOrders = (req, res, next) => {
     var _a;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getOrders({ include: ["products"] }).then((orders) => {
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getOrders().then((orders) => {
         res.render("shop/orders", {
             orders: orders,
             pageTitle: "Your Orders",
