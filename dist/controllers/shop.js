@@ -41,17 +41,12 @@ export const getIndex = (req, res, next) => {
 };
 export const getCart = (req, res, next) => {
     var _a;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getCart().then((cart) => {
-        return cart
-            .getProducts()
-            .then((products) => {
-            res.render("shop/cart", {
-                path: "/cart",
-                pageTitle: "Your Cart",
-                products: products,
-            });
-        })
-            .catch((err) => { });
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getCart().then((products) => {
+        res.render("shop/cart", {
+            path: "/cart",
+            pageTitle: "Your Cart",
+            products: products,
+        });
     }).catch((err) => {
         console.log(err);
     });

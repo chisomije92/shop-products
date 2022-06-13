@@ -52,17 +52,12 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
   req.user
     ?.getCart()
-    .then((cart: any) => {
-      return cart
-        .getProducts()
-        .then((products: ProductType[]) => {
-          res.render("shop/cart", {
-            path: "/cart",
-            pageTitle: "Your Cart",
-            products: products,
-          });
-        })
-        .catch((err: Error) => {});
+    .then((products: ProductType[]) => {
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: products,
+      });
     })
     .catch((err: Error) => {
       console.log(err);
