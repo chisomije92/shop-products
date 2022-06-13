@@ -100,6 +100,30 @@ class User {
       }
     );
   }
+
+  addOrders() {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .insertOne(this.cart)
+      .then((result) => {
+        this.cart = { items: [] };
+        return db.collection("users").updateOne(
+          { _id: this._id },
+          {
+            $set: {
+              cart: {
+                items: [],
+              },
+            },
+          }
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   static findById(userId: string) {
     const db = getDb();
     return db.collection("users").findOne({ _id: new ObjectId(userId) });

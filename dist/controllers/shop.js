@@ -86,26 +86,8 @@ export const getOrders = (req, res, next) => {
 };
 export const postOrder = (req, res, next) => {
     var _a;
-    let fetchedCart;
-    let duplicatedProducts;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getCart().then((cart) => {
-        fetchedCart = cart;
-        return cart.getProducts();
-    }).then((products) => {
-        var _a;
-        duplicatedProducts = products;
-        return (_a = req.user) === null || _a === void 0 ? void 0 : _a.createOrder();
-    }).then((order) => {
-        return order.addProducts(duplicatedProducts.map((product) => {
-            product.orderItem = { quantity: product.cartItem.quantity };
-            return product;
-        }));
-    }).then((result) => {
-        fetchedCart.setProducts(null);
-    }).then((result) => {
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.addOrders().then(() => {
         res.redirect("/orders");
-    }).catch((err) => {
-        console.log(err);
     });
 };
 //# sourceMappingURL=shop.js.map
