@@ -57,15 +57,22 @@ class Product {
     }
     static deleteById(prodId) {
         const db = getDb();
-        return db
+        return (db
             .collection("products")
             .deleteOne({ _id: new ObjectId(prodId) })
-            .then((result) => {
-            console.log(result);
-        })
+            // .then(() => {
+            //   return db.collection("users").updateOne(
+            //     { _id: new ObjectId(prodId) },
+            //     {
+            //       $pull: { items: { productId: new ObjectId(prodId) } },
+            //     }
+            //   );
+            // }).then((product) => {
+            //   console.log(product);
+            // })
             .catch((err) => {
             console.log(err);
-        });
+        }));
     }
 }
 export default Product;

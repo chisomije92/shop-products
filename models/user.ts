@@ -1,4 +1,4 @@
-import { ObjectId, WithId } from "mongodb";
+import { Db, MongoErrorLabel, ObjectId, WithId } from "mongodb";
 import { getDb } from "../utils/database.js";
 import { ProductType } from "./product.js";
 
@@ -9,9 +9,7 @@ export interface ItemObjType {
 export interface CartItemType {
   items: ItemObjType[];
 }
-// export interface CartType {
-//   cart: CartItemType[]
-// }
+
 export interface UserType {
   id?: string;
   name: string;
@@ -19,7 +17,6 @@ export interface UserType {
 }
 
 class User {
-  // _id?: ObjectId;
   name: string;
   email: string;
   _id: ObjectId;
@@ -67,13 +64,17 @@ class User {
 
   getCart() {
     const productIds = this.cart.items.map((item) => item.productId);
+
     const db = getDb();
+    let storedProducts: any;
+    let itemsProduct: { productId: ObjectId; quantity: number }[];
+
     return db
       .collection("products")
       .find({ _id: { $in: productIds } })
       .toArray()
       .then((products) => {
-        return products.map((p) => {
+        storedProducts = products.map((p) => {
           return {
             ...p,
             quantity: this.cart.items.find((i) => {
@@ -81,6 +82,27 @@ class User {
             })?.quantity,
           };
         });
+        return storedProducts;
+      })
+      .then((products) => {
+        itemsProduct = products.map((p: any) => ({
+          productId: p._id,
+          quantity: p.quantity,
+        }));
+
+        return db.collection("users").updateOne(
+          { _id: this._id },
+          {
+            $set: {
+              cart: {
+                items: itemsProduct.filter((i) => i.quantity > 0),
+              },
+            },
+          }
+        );
+      })
+      .then(() => {
+        return storedProducts;
       });
   }
 

@@ -38,17 +38,36 @@ class User {
     getCart() {
         const productIds = this.cart.items.map((item) => item.productId);
         const db = getDb();
+        let storedProducts;
+        let itemsProduct;
         return db
             .collection("products")
             .find({ _id: { $in: productIds } })
             .toArray()
             .then((products) => {
-            return products.map((p) => {
+            storedProducts = products.map((p) => {
                 var _a;
                 return Object.assign(Object.assign({}, p), { quantity: (_a = this.cart.items.find((i) => {
                         return i.productId.toString() === p._id.toString();
                     })) === null || _a === void 0 ? void 0 : _a.quantity });
             });
+            return storedProducts;
+        })
+            .then((products) => {
+            itemsProduct = products.map((p) => ({
+                productId: p._id,
+                quantity: p.quantity,
+            }));
+            return db.collection("users").updateOne({ _id: this._id }, {
+                $set: {
+                    cart: {
+                        items: itemsProduct.filter((i) => i.quantity > 0),
+                    },
+                },
+            });
+        })
+            .then(() => {
+            return storedProducts;
         });
     }
     deleteItemFromCart(productId) {
