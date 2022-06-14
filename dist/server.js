@@ -4,15 +4,18 @@ import adminRoute from "./routes/admin.js";
 import shopRoute from "./routes/shop.js";
 import path from "path";
 import { get404Page } from "./controllers/404.js";
-import mongoConnect from "./utils/database.js";
-// import sequelize from "./utils/database.js";
-// import Product from "./models/product.js";
+import mongoose from "mongoose";
 import User from "./models/user.js";
 import { ObjectId } from "mongodb";
-// import Cart from "./models/cart.js";
-// import CartItem from "./models/cart-item.js";
-// import Order from "./models/order.js";
-// import OrderItem from "./models/order-item.js";
+import dotenv from "dotenv";
+dotenv.config();
+let conn_string;
+if (process.env.MONGO_CONN_STRING) {
+    conn_string = process.env.MONGO_CONN_STRING;
+}
+else {
+    throw new Error("MONGO_CONN_STRING is not set");
+}
 const __dirname = path.resolve();
 const app = express();
 // app.set("view engine", "pug");
@@ -35,7 +38,12 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(get404Page);
-mongoConnect(() => {
+mongoose
+    .connect(conn_string)
+    .then(() => {
     app.listen(3000);
+})
+    .catch((err) => {
+    console.log(err);
 });
 //# sourceMappingURL=server.js.map
