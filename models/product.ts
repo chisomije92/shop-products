@@ -1,3 +1,32 @@
+import mongoose, { Schema, Types } from "mongoose";
+
+export interface ProductType {
+  _id?: Types.ObjectId;
+  title: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+}
+
+const productSchema = new Schema<ProductType>({
+  title: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  imageUrl: {
+    type: String,
+    required: true,
+  },
+});
+
 // import { getDb } from "../utils/database.js";
 // import { ObjectId } from "mongodb";
 
