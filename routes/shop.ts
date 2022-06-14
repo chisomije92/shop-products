@@ -14,8 +14,8 @@ import {
 const router = express.Router();
 
 router.get("/", getIndex);
-// router.get("/cart", getCart);
-// router.post("/cart", postCart);
+router.get("/cart", getCart);
+router.post("/cart", postCart);
 // router.post("/create-order", postOrder);
 // router.post("/cart-delete-item", deleteCartProduct);
 router.get("/products", getProducts);

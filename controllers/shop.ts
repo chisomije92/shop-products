@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ObjectId, WithId } from "mongodb";
 
 import Product, { ProductType } from "../models/product.js";
-
+import User from "../models/user.js";
 export const getProducts = (
   req: Request,
   res: Response,
@@ -51,13 +51,15 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
+  // User.findById(req.user?._id)
   req.user
-    ?.getCart()
-    .then((products: ProductType[]) => {
+    ?.populate("cart.items.productId")
+    .then((products: any) => {
+      console.log(products?.cart?.items);
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: products,
+        products: products?.cart.items,
       });
     })
     .catch((err: Error) => {

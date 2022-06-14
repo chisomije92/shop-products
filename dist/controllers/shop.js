@@ -42,11 +42,14 @@ export const getIndex = (req, res, next) => {
 };
 export const getCart = (req, res, next) => {
     var _a;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getCart().then((products) => {
+    // User.findById(req.user?._id)
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((products) => {
+        var _a;
+        console.log((_a = products === null || products === void 0 ? void 0 : products.cart) === null || _a === void 0 ? void 0 : _a.items);
         res.render("shop/cart", {
             path: "/cart",
             pageTitle: "Your Cart",
-            products: products,
+            products: products === null || products === void 0 ? void 0 : products.cart.items,
         });
     }).catch((err) => {
         console.log(err);

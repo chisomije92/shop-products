@@ -86,7 +86,6 @@ export const getProducts = (req, res, next) => {
         // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
         // .populate("userId") // this is to populate the userId field with the user details
         .then((products) => {
-        console.log(products);
         res.render("admin/products", {
             products: products,
             pageTitle: "Admin Products",

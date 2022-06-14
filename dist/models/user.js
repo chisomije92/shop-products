@@ -22,6 +22,28 @@ const UserSchema = new Schema({
         ],
     },
 });
+UserSchema.methods.addToCart = function (product) {
+    const cartProductIndex = this.cart.items.findIndex((item) => {
+        return item.productId.toString() === product._id.toString();
+    });
+    let newQuantity = 1;
+    const updatedCartItems = [...this.cart.items];
+    if (cartProductIndex >= 0) {
+        newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+        updatedCartItems[cartProductIndex].quantity = newQuantity;
+    }
+    else {
+        updatedCartItems.push({
+            productId: product._id,
+            quantity: newQuantity,
+        });
+    }
+    let updatedItems = {
+        items: updatedCartItems,
+    };
+    this.cart = updatedItems;
+    this.save();
+};
 export default model("User", UserSchema);
 // import { ObjectId } from "mongodb";
 // import { getDb } from "../utils/database.js";
@@ -53,27 +75,27 @@ export default model("User", UserSchema);
 //     return db.collection("users").insertOne(this);
 //   }
 //   addToCart(product: any) {
-//     const cartProductIndex = this.cart.items.findIndex((item) => {
-//       return item.productId.toString() === product._id.toString();
-//     });
-//     let newQuantity = 1;
-//     const updatedCartItems: ItemObjType[] = [...this.cart.items];
-//     if (cartProductIndex >= 0) {
-//       newQuantity = this.cart.items[cartProductIndex].quantity + 1;
-//       updatedCartItems[cartProductIndex].quantity = newQuantity;
-//     } else {
-//       updatedCartItems.push({
-//         productId: product._id,
-//         quantity: newQuantity,
-//       });
-//     }
-//     let updatedItems: CartItemType = {
-//       items: updatedCartItems,
-//     };
-//     const db = getDb();
-//     return db
-//       .collection("users")
-//       .updateOne({ _id: this._id }, { $set: { cart: updatedItems } });
+// const cartProductIndex = this.cart.items.findIndex((item) => {
+//   return item.productId.toString() === product._id.toString();
+// });
+// let newQuantity = 1;
+// const updatedCartItems: ItemObjType[] = [...this.cart.items];
+// if (cartProductIndex >= 0) {
+//   newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+//   updatedCartItems[cartProductIndex].quantity = newQuantity;
+// } else {
+//   updatedCartItems.push({
+//     productId: product._id,
+//     quantity: newQuantity,
+//   });
+// }
+// let updatedItems: CartItemType = {
+//   items: updatedCartItems,
+// };
+// const db = getDb();
+// return db
+//   .collection("users")
+//   .updateOne({ _id: this._id }, { $set: { cart: updatedItems } });
 //   }
 //   getCart() {
 //     const productIds = this.cart.items.map((item) => item.productId);

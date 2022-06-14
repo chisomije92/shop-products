@@ -7,9 +7,7 @@ export interface ItemObjType {
   quantity: number;
 }
 export interface CartItemType {
-  cart: {
-    items: ItemObjType[];
-  };
+  items: ItemObjType[];
 }
 
 export interface UserType {
@@ -41,6 +39,31 @@ const UserSchema = new Schema<UserType>({
     ],
   },
 });
+
+UserSchema.methods.addToCart = function (product: any) {
+  const cartProductIndex = this.cart.items.findIndex((item: any) => {
+    return item.productId.toString() === product._id.toString();
+  });
+
+  let newQuantity = 1;
+
+  const updatedCartItems: ItemObjType[] = [...this.cart.items];
+
+  if (cartProductIndex >= 0) {
+    newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+    updatedCartItems[cartProductIndex].quantity = newQuantity;
+  } else {
+    updatedCartItems.push({
+      productId: product._id,
+      quantity: newQuantity,
+    });
+  }
+  let updatedItems = {
+    items: updatedCartItems,
+  };
+  this.cart = updatedItems;
+  this.save();
+};
 
 export default model<UserType>("User", UserSchema);
 
@@ -80,31 +103,31 @@ export default model<UserType>("User", UserSchema);
 //   }
 
 //   addToCart(product: any) {
-//     const cartProductIndex = this.cart.items.findIndex((item) => {
-//       return item.productId.toString() === product._id.toString();
-//     });
+// const cartProductIndex = this.cart.items.findIndex((item) => {
+//   return item.productId.toString() === product._id.toString();
+// });
 
-//     let newQuantity = 1;
+// let newQuantity = 1;
 
-//     const updatedCartItems: ItemObjType[] = [...this.cart.items];
+// const updatedCartItems: ItemObjType[] = [...this.cart.items];
 
-//     if (cartProductIndex >= 0) {
-//       newQuantity = this.cart.items[cartProductIndex].quantity + 1;
-//       updatedCartItems[cartProductIndex].quantity = newQuantity;
-//     } else {
-//       updatedCartItems.push({
-//         productId: product._id,
-//         quantity: newQuantity,
-//       });
-//     }
-//     let updatedItems: CartItemType = {
-//       items: updatedCartItems,
-//     };
+// if (cartProductIndex >= 0) {
+//   newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+//   updatedCartItems[cartProductIndex].quantity = newQuantity;
+// } else {
+//   updatedCartItems.push({
+//     productId: product._id,
+//     quantity: newQuantity,
+//   });
+// }
+// let updatedItems: CartItemType = {
+//   items: updatedCartItems,
+// };
 
-//     const db = getDb();
-//     return db
-//       .collection("users")
-//       .updateOne({ _id: this._id }, { $set: { cart: updatedItems } });
+// const db = getDb();
+// return db
+//   .collection("users")
+//   .updateOne({ _id: this._id }, { $set: { cart: updatedItems } });
 //   }
 
 //   getCart() {
