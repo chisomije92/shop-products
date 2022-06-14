@@ -94,7 +94,7 @@ export const postOrder = (req, res, next) => {
         const products = user === null || user === void 0 ? void 0 : user.cart.items.map((i) => {
             return {
                 quantity: i.quantity,
-                product: Object.assign({}, i.productId),
+                product: Object.assign({}, i.productId._doc),
             };
         });
         const order = new Order({
