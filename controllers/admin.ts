@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ObjectId } from "mongodb";
-import Product, { ProductType } from "../models/product.js";
+import Product from "../models/product.js";
 
 export const getAddProduct = (
   req: Request,
@@ -112,7 +111,10 @@ export const getProducts = (
   next: NextFunction
 ) => {
   Product.find()
+    // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
+    // .populate("userId") // this is to populate the userId field with the user details
     .then((products) => {
+      console.log(products);
       res.render("admin/products", {
         products: products,
         pageTitle: "Admin Products",
