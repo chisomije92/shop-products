@@ -106,6 +106,9 @@ export const postOrder = (req, res, next) => {
         });
         return order.save();
     }).then(() => {
+        var _a;
+        (_a = req.user) === null || _a === void 0 ? void 0 : _a.clearCart();
+    }).then(() => {
         res.redirect("/orders");
     }).catch((err) => {
         console.log(err);

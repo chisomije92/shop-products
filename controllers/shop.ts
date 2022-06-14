@@ -129,6 +129,9 @@ export const postOrder = (req: Request, res: Response, next: NextFunction) => {
       return order.save();
     })
     .then(() => {
+      req.user?.clearCart();
+    })
+    .then(() => {
       res.redirect("/orders");
     })
     .catch((err: Error) => {
