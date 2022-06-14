@@ -1,5 +1,4 @@
 import Product from "../models/product.js";
-// import User from "../models/user.js";
 import Order from "../models/order.js";
 export const getProducts = (req, res, next) => {
     Product.find()
@@ -77,13 +76,15 @@ export const deleteCartProduct = (req, res, next) => {
 };
 export const getOrders = (req, res, next) => {
     var _a;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.getOrders().then((orders) => {
+    Order.find({ "user.userId": (_a = req.user) === null || _a === void 0 ? void 0 : _a._id })
+        .then((orders) => {
         res.render("shop/orders", {
             orders: orders,
             pageTitle: "Your Orders",
             path: "/orders",
         });
-    }).catch((err) => {
+    })
+        .catch((err) => {
         console.log(err);
     });
 };

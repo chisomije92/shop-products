@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import Product, { ProductType } from "../models/product.js";
-// import User from "../models/user.js";
+import User from "../models/user.js";
 import Order from "../models/order.js";
 export const getProducts = (
   req: Request,
@@ -95,9 +95,8 @@ export const deleteCartProduct = (
 };
 
 export const getOrders = (req: Request, res: Response, next: NextFunction) => {
-  req.user
-    ?.getOrders()
-    .then((orders: any) => {
+  Order.find({ "user.userId": req.user?._id })
+    .then((orders) => {
       res.render("shop/orders", {
         orders: orders,
         pageTitle: "Your Orders",
