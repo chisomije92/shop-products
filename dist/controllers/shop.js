@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import Product from "../models/product.js";
 export const getProducts = (req, res, next) => {
     Product.find()
@@ -44,8 +43,6 @@ export const getCart = (req, res, next) => {
     var _a;
     // User.findById(req.user?._id)
     (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((products) => {
-        var _a;
-        console.log((_a = products === null || products === void 0 ? void 0 : products.cart) === null || _a === void 0 ? void 0 : _a.items);
         res.render("shop/cart", {
             path: "/cart",
             pageTitle: "Your Cart",
@@ -69,7 +66,7 @@ export const postCart = (req, res, next) => {
 export const deleteCartProduct = (req, res, next) => {
     var _a;
     const prodId = req.body.productId;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.deleteItemFromCart(new ObjectId(prodId)).then(() => {
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.deleteItemFromCart(prodId).then(() => {
         res.redirect("/cart");
     }).catch((err) => {
         console.log(err);

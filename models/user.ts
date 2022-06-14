@@ -62,7 +62,15 @@ UserSchema.methods.addToCart = function (product: any) {
     items: updatedCartItems,
   };
   this.cart = updatedItems;
-  this.save();
+  return this.save();
+};
+
+UserSchema.methods.deleteItemFromCart = function (productId: string) {
+  const updatedCartItems = this.cart.items.filter(
+    (item: any) => item.productId.toString() !== productId.toString()
+  );
+  this.cart = { items: updatedCartItems };
+  return this.save();
 };
 
 export default model<UserType>("User", UserSchema);
