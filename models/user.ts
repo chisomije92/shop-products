@@ -1,3 +1,40 @@
+import mongoose, { Types } from "mongoose";
+
+const { Schema, model } = mongoose;
+
+export interface ItemObjType {
+  productId: Types.ObjectId;
+  quantity: number;
+}
+export interface CartItemType {
+  cart: {
+    items: ItemObjType[];
+  };
+}
+
+export interface UserType {
+  id?: Types.ObjectId;
+  name: string;
+  email: string;
+  cart: CartItemType;
+}
+
+const UserSchema = new Schema<UserType>({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  cart: {
+    items: [{ productId: { type: Schema.Types.ObjectId }, quantity: Number }],
+  },
+});
+
+export default model<UserType>("User", UserSchema);
+
 // import { ObjectId } from "mongodb";
 // import { getDb } from "../utils/database.js";
 

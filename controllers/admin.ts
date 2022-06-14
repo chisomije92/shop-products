@@ -78,17 +78,17 @@ export const postEditProduct = (
   const updatedImageUrl: string = req.body.imageUrl;
   const updatedDescription: string = req.body.description;
 
-  const product = new Product(
-    updatedTitle,
-    updatedPrice,
-    updatedDescription,
-    updatedImageUrl,
-    req.user?._id,
-    prodId
-  );
-  product.save().then((product) => {
-    res.redirect("/admin/products");
-  });
+  Product.findById(prodId)
+    .then((product) => {
+      product!.title = updatedTitle;
+      product!.price = updatedPrice;
+      product!.description = updatedDescription;
+      product!.imageUrl = updatedImageUrl;
+      return product!.save();
+    })
+    .then(() => {
+      res.redirect("/admin/products");
+    });
   //     product
   //       .update({
   //         title: updatedTitle,
@@ -110,7 +110,7 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("admin/products", {
         products: products,
@@ -137,7 +137,7 @@ export const postDeleteProduct = (
   //     res.redirect("/admin/products");
   //   });
 
-  Product.deleteById(prodId)
+  Product.findByIdAndRemove(prodId)
     .then(() => {
       res.redirect("/admin/products");
     })

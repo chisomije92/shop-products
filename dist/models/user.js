@@ -1,4 +1,19 @@
-"use strict";
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
+const UserSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    cart: {
+        items: [{ productId: { type: Schema.Types.ObjectId }, quantity: Number }],
+    },
+});
+export default model("User", UserSchema);
 // import { ObjectId } from "mongodb";
 // import { getDb } from "../utils/database.js";
 // export interface ItemObjType {

@@ -6,6 +6,7 @@ import path from "path";
 import { get404Page } from "./controllers/404.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import User from "./models/user.js";
 dotenv.config();
 let conn_string;
 if (process.env.MONGO_CONN_STRING) {
@@ -22,28 +23,32 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-// app.use((req, res, next) => {
-//   User.findById("62a61389040805c6c5c61f32")
-//     .then((user) => {
-//       // const userId = new ObjectId(user?._id);
-//       req.user = new User(
-//         user?.name,
-//         user?.email,
-//         new ObjectId(user?._id),
-//         user?.cart
-//       );
-//       next();
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
+app.use((req, res, next) => {
+    User.findById("62a89fa640132445849b1e25")
+        .then((user) => {
+        req.user = user;
+        next();
+    })
+        .catch((err) => {
+        console.log(err);
+    });
+});
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(get404Page);
 mongoose
     .connect(conn_string)
     .then(() => {
+    User.findOne().then((user) => {
+        if (!user) {
+            const user = new User({
+                name: "Jerry",
+                email: "test@test.com",
+                cart: { items: [] },
+            });
+            user.save();
+        }
+    });
     app.listen(3000);
 })
     .catch((err) => {
