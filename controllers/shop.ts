@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { ObjectId, WithId } from "mongodb";
 
 import Product, { ProductType } from "../models/product.js";
-import User from "../models/user.js";
+// import User from "../models/user.js";
+import Order from "../models/order.js";
 export const getProducts = (
   req: Request,
   res: Response,
@@ -55,10 +55,11 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
   req.user
     ?.populate("cart.items.productId")
     .then((products: any) => {
+      const items = products?.cart.items;
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: products?.cart.items,
+        products: items,
       });
     })
     .catch((err: Error) => {
@@ -109,7 +110,28 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const postOrder = (req: Request, res: Response, next: NextFunction) => {
-  req.user?.addOrder().then(() => {
-    res.redirect("/orders");
-  });
+  req.user
+    ?.populate("cart.items.productId")
+    .then((user: any) => {
+      const products = user?.cart.items.map((i: any) => {
+        return {
+          quantity: i.quantity,
+          product: { ...i.productId },
+        };
+      });
+      const order = new Order({
+        user: {
+          name: req.user?.name,
+          userId: req.user?._id,
+        },
+        products: products,
+      });
+      return order.save();
+    })
+    .then(() => {
+      res.redirect("/orders");
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };

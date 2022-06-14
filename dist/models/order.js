@@ -1,12 +1,29 @@
-import sequelize from "../utils/database.js";
-import Sequelize from "sequelize";
-export const Order = sequelize.define("order", {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true,
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
+const OrderSchema = new Schema({
+    products: [
+        {
+            product: {
+                type: Object,
+                required: true,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+            },
+        },
+    ],
+    user: {
+        name: {
+            type: String,
+            required: true,
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "User",
+        },
     },
 });
-export default Order;
+export default model("Order", OrderSchema);
 //# sourceMappingURL=order.js.map

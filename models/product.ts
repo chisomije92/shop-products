@@ -7,6 +7,7 @@ export interface ProductType {
   description: string;
   imageUrl: string;
   userId: Types.ObjectId;
+  quantity?: number;
 }
 const { Schema, model } = mongoose;
 const productSchema = new Schema<ProductType>({

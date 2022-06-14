@@ -1,4 +1,6 @@
 import Product from "../models/product.js";
+// import User from "../models/user.js";
+import Order from "../models/order.js";
 export const getProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
@@ -43,10 +45,11 @@ export const getCart = (req, res, next) => {
     var _a;
     // User.findById(req.user?._id)
     (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((products) => {
+        const items = products === null || products === void 0 ? void 0 : products.cart.items;
         res.render("shop/cart", {
             path: "/cart",
             pageTitle: "Your Cart",
-            products: products === null || products === void 0 ? void 0 : products.cart.items,
+            products: items,
         });
     }).catch((err) => {
         console.log(err);
@@ -86,8 +89,26 @@ export const getOrders = (req, res, next) => {
 };
 export const postOrder = (req, res, next) => {
     var _a;
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.addOrder().then(() => {
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((user) => {
+        var _a, _b;
+        const products = user === null || user === void 0 ? void 0 : user.cart.items.map((i) => {
+            return {
+                quantity: i.quantity,
+                product: Object.assign({}, i.productId),
+            };
+        });
+        const order = new Order({
+            user: {
+                name: (_a = req.user) === null || _a === void 0 ? void 0 : _a.name,
+                userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b._id,
+            },
+            products: products,
+        });
+        return order.save();
+    }).then(() => {
         res.redirect("/orders");
+    }).catch((err) => {
+        console.log(err);
     });
 };
 //# sourceMappingURL=shop.js.map
