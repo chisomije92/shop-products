@@ -19,7 +19,7 @@ router.get("/", getIndex);
 // router.post("/create-order", postOrder);
 // router.post("/cart-delete-item", deleteCartProduct);
 router.get("/products", getProducts);
-// router.get("/products/:productId", getProduct);
+router.get("/products/:productId", getProduct);
 // router.get("/orders", getOrders);
 
 export default router;
