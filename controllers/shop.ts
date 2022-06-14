@@ -8,7 +8,7 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("shop/product-list", {
         products: products,
@@ -37,7 +37,7 @@ export const getProduct = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getIndex = (req: Request, res: Response, next: NextFunction) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("shop/index", {
         products: products,
