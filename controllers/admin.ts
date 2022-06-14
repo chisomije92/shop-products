@@ -28,6 +28,7 @@ export const postAddProduct = (
     price: price,
     description: description,
     imageUrl: imageUrl,
+    userId: req.user,
   });
 
   product

@@ -6,6 +6,7 @@ export interface ProductType {
   price: number;
   description: string;
   imageUrl: string;
+  userId: Types.ObjectId;
 }
 const { Schema, model } = mongoose;
 const productSchema = new Schema<ProductType>({
@@ -23,6 +24,11 @@ const productSchema = new Schema<ProductType>({
   },
   imageUrl: {
     type: String,
+    required: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
 });
