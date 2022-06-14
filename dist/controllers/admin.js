@@ -7,19 +7,16 @@ export const getAddProduct = (req, res, next) => {
     });
 };
 export const postAddProduct = (req, res, next) => {
-    var _a;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    // req.user
-    //   ?.createProduct({
-    //     title,
-    //     price,
-    //     imageUrl,
-    //     description,
-    //   })
-    const product = new Product(title, price, description, imageUrl, (_a = req.user) === null || _a === void 0 ? void 0 : _a._id);
+    const product = new Product({
+        title: title,
+        price: price,
+        description: description,
+        imageUrl: imageUrl,
+    });
     product
         .save()
         .then(() => {

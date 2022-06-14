@@ -1,4 +1,5 @@
-import { Schema } from "mongoose";
+import mongoose from "mongoose";
+const { Schema, model } = mongoose;
 const productSchema = new Schema({
     title: {
         type: String,
@@ -17,6 +18,7 @@ const productSchema = new Schema({
         required: true,
     },
 });
+export default model("Product", productSchema);
 // import { getDb } from "../utils/database.js";
 // import { ObjectId } from "mongodb";
 // export interface ProductType {

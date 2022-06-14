@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export interface ProductType {
   _id?: Types.ObjectId;
@@ -7,7 +7,7 @@ export interface ProductType {
   description: string;
   imageUrl: string;
 }
-
+const { Schema, model } = mongoose;
 const productSchema = new Schema<ProductType>({
   title: {
     type: String,
@@ -26,6 +26,8 @@ const productSchema = new Schema<ProductType>({
     required: true,
   },
 });
+
+export default model<ProductType>("Product", productSchema);
 
 // import { getDb } from "../utils/database.js";
 // import { ObjectId } from "mongodb";

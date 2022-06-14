@@ -23,21 +23,12 @@ export const postAddProduct = (
   const imageUrl: string = req.body.imageUrl;
   const price: number = req.body.price;
   const description: string = req.body.description;
-
-  // req.user
-  //   ?.createProduct({
-  //     title,
-  //     price,
-  //     imageUrl,
-  //     description,
-  //   })
-  const product = new Product(
-    title,
-    price,
-    description,
-    imageUrl,
-    req.user?._id
-  );
+  const product = new Product({
+    title: title,
+    price: price,
+    description: description,
+    imageUrl: imageUrl,
+  });
 
   product
     .save()

@@ -5,7 +5,6 @@ import shopRoute from "./routes/shop.js";
 import path from "path";
 import { get404Page } from "./controllers/404.js";
 import mongoose from "mongoose";
-import User from "./models/user.js";
 import { ObjectId } from "mongodb";
 import dotenv from "dotenv";
 
@@ -28,22 +27,22 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-  User.findById("62a61389040805c6c5c61f32")
-    .then((user) => {
-      // const userId = new ObjectId(user?._id);
-      req.user = new User(
-        user?.name,
-        user?.email,
-        new ObjectId(user?._id),
-        user?.cart
-      );
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.use((req, res, next) => {
+//   User.findById("62a61389040805c6c5c61f32")
+//     .then((user) => {
+//       // const userId = new ObjectId(user?._id);
+//       req.user = new User(
+//         user?.name,
+//         user?.email,
+//         new ObjectId(user?._id),
+//         user?.cart
+//       );
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
 app.use("/admin", adminRoute);
 app.use(shopRoute);
