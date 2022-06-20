@@ -2,10 +2,11 @@ import express from "express";
 import bodyParser from "body-parser";
 import adminRoute from "./routes/admin.js";
 import shopRoute from "./routes/shop.js";
+import authRoute from "./routes/auth.js";
 import path from "path";
 import { get404Page } from "./controllers/404.js";
 import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
+
 import dotenv from "dotenv";
 import User from "./models/user.js";
 
@@ -41,7 +42,7 @@ app.use((req, res, next) => {
 
 app.use("/admin", adminRoute);
 app.use(shopRoute);
-
+app.use(authRoute);
 app.use(get404Page);
 
 mongoose
