@@ -90,6 +90,7 @@ export const getProducts = (req, res, next) => {
             products: products,
             pageTitle: "Admin Products",
             path: "/admin/products",
+            isAuthenticated: req.isLoggedIn,
         });
     })
         .catch((err) => {

@@ -7,6 +7,7 @@ export const getProducts = (req, res, next) => {
             products: products,
             pageTitle: "All Products",
             path: "/products",
+            isAuthenticated: false,
         });
     })
         .catch((err) => {
@@ -21,6 +22,7 @@ export const getProduct = (req, res, next) => {
             product: product,
             pageTitle: product === null || product === void 0 ? void 0 : product.title,
             path: "/products",
+            isAuthenticated: false,
         });
     })
         .catch((err) => {
@@ -34,6 +36,7 @@ export const getIndex = (req, res, next) => {
             products: products,
             pageTitle: "Shop",
             path: "/",
+            isAuthenticated: false,
         });
     })
         .catch((err) => {
@@ -49,6 +52,7 @@ export const getCart = (req, res, next) => {
             path: "/cart",
             pageTitle: "Your Cart",
             products: items,
+            isAuthenticated: false,
         });
     }).catch((err) => {
         console.log(err);
@@ -82,6 +86,7 @@ export const getOrders = (req, res, next) => {
             orders: orders,
             pageTitle: "Your Orders",
             path: "/orders",
+            isAuthenticated: false,
         });
     })
         .catch((err) => {

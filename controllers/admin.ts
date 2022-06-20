@@ -118,6 +118,7 @@ export const getProducts = (
         products: products,
         pageTitle: "Admin Products",
         path: "/admin/products",
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err: Error) => {
