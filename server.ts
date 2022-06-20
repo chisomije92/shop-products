@@ -9,6 +9,9 @@ import mongoose from "mongoose";
 import sessions from "express-session";
 import dotenv from "dotenv";
 import User from "./models/user.js";
+import MongoDBStore from "connect-mongodb-session";
+
+const MongoStore = MongoDBStore(sessions);
 
 dotenv.config();
 
@@ -21,8 +24,11 @@ if (process.env.MONGO_CONN_STRING) {
 
 const __dirname = path.resolve();
 const app = express();
-// app.set("view engine", "pug");
-// app.set("views", "views");
+
+const store = new MongoStore({
+  uri: conn_string,
+  collection: "sessions",
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -33,6 +39,7 @@ app.use(
     secret: "my secret",
     resave: false,
     saveUninitialized: false,
+    store: store,
   })
 );
 
