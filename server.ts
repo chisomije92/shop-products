@@ -43,15 +43,27 @@ app.use(
   })
 );
 
+// app.use((req, res, next) => {
+//   User.findById("62a89fa640132445849b1e25")
+//     .then((user) => {
+//       req.user = user;
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
+
 app.use((req, res, next) => {
-  User.findById("62a89fa640132445849b1e25")
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 });
 
 app.use("/admin", adminRoute);

@@ -7,7 +7,7 @@ export const getProducts = (req, res, next) => {
             products: products,
             pageTitle: "All Products",
             path: "/products",
-            isAuthenticated: false,
+            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {
@@ -22,7 +22,7 @@ export const getProduct = (req, res, next) => {
             product: product,
             pageTitle: product === null || product === void 0 ? void 0 : product.title,
             path: "/products",
-            isAuthenticated: false,
+            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {
@@ -36,7 +36,7 @@ export const getIndex = (req, res, next) => {
             products: products,
             pageTitle: "Shop",
             path: "/",
-            isAuthenticated: false,
+            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {
@@ -45,18 +45,16 @@ export const getIndex = (req, res, next) => {
 };
 export const getCart = (req, res, next) => {
     var _a;
-    // User.findById(req.user?._id)
-    (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((products) => {
-        const items = products === null || products === void 0 ? void 0 : products.cart.items;
+    // User.findById(req.session.user?._id)
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((user) => {
+        const products = user.cart.items;
         res.render("shop/cart", {
             path: "/cart",
             pageTitle: "Your Cart",
-            products: items,
-            isAuthenticated: false,
+            products: products,
+            isAuthenticated: req.session.isLoggedIn,
         });
-    }).catch((err) => {
-        console.log(err);
-    });
+    }).catch((err) => console.log(err));
 };
 export const postCart = (req, res, next) => {
     const prodId = req.body.productId;
@@ -86,7 +84,7 @@ export const getOrders = (req, res, next) => {
             orders: orders,
             pageTitle: "Your Orders",
             path: "/orders",
-            isAuthenticated: false,
+            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {

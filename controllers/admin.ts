@@ -10,6 +10,7 @@ export const getAddProduct = (
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -60,6 +61,7 @@ export const getEditProduct = (
         path: "/admin/edit-product",
         editing: editMode,
         product,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
@@ -118,7 +120,7 @@ export const getProducts = (
         products: products,
         pageTitle: "Admin Products",
         path: "/admin/products",
-        isAuthenticated: req.isLoggedIn,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {

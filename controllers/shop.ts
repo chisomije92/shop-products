@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import Product, { ProductType } from "../models/product.js";
-import User from "../models/user.js";
+import User, { UserType } from "../models/user.js";
 import Order from "../models/order.js";
 export const getProducts = (
   req: Request,
@@ -14,7 +14,7 @@ export const getProducts = (
         products: products,
         pageTitle: "All Products",
         path: "/products",
-        isAuthenticated: false,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
@@ -30,7 +30,7 @@ export const getProduct = (req: Request, res: Response, next: NextFunction) => {
         product: product,
         pageTitle: product?.title,
         path: "/products",
-        isAuthenticated: false,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
@@ -45,7 +45,7 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
         products: products,
         pageTitle: "Shop",
         path: "/",
-        isAuthenticated: false,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
@@ -54,21 +54,19 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
-  // User.findById(req.user?._id)
+  // User.findById(req.session.user?._id)
   req.user
     ?.populate("cart.items.productId")
-    .then((products: any) => {
-      const items = products?.cart.items;
+    .then((user: UserType) => {
+      const products = user.cart.items;
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: items,
-        isAuthenticated: false,
+        products: products,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+    .catch((err: Error) => console.log(err));
 };
 
 export const postCart = (req: Request, res: Response, next: NextFunction) => {
@@ -105,7 +103,7 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
         orders: orders,
         pageTitle: "Your Orders",
         path: "/orders",
-        isAuthenticated: false,
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
