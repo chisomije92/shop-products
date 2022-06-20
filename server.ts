@@ -6,7 +6,7 @@ import authRoute from "./routes/auth.js";
 import path from "path";
 import { get404Page } from "./controllers/404.js";
 import mongoose from "mongoose";
-
+import sessions from "express-session";
 import dotenv from "dotenv";
 import User from "./models/user.js";
 
@@ -28,6 +28,13 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  sessions({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.use((req, res, next) => {
   User.findById("62a89fa640132445849b1e25")
