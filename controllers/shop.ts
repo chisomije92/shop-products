@@ -14,7 +14,6 @@ export const getProducts = (
         products: products,
         pageTitle: "All Products",
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
@@ -62,7 +61,6 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
         path: "/cart",
         pageTitle: "Your Cart",
         products: products,
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => console.log(err));
@@ -102,7 +100,6 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
         orders: orders,
         pageTitle: "Your Orders",
         path: "/orders",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {

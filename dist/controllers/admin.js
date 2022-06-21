@@ -4,7 +4,6 @@ export const getAddProduct = (req, res, next) => {
         pageTitle: "Add Product",
         path: "/admin/add-product",
         editing: false,
-        isAuthenticated: req.session.isLoggedIn,
     });
 };
 export const postAddProduct = (req, res, next) => {
@@ -44,7 +43,6 @@ export const getEditProduct = (req, res, next) => {
             path: "/admin/edit-product",
             editing: editMode,
             product,
-            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {
@@ -68,20 +66,6 @@ export const postEditProduct = (req, res, next) => {
         .then(() => {
         res.redirect("/admin/products");
     });
-    //     product
-    //       .update({
-    //         title: updatedTitle,
-    //         price: updatedPrice,
-    //         imageUrl: updatedImageUrl,
-    //         description: updatedDescription,
-    //       })
-    //       .then((result) => {
-    //         res.redirect("/admin/products");
-    //       });
-    //   })
-    //   .catch((err: Error) => {
-    //     console.log(err);
-    //   });
 };
 export const getProducts = (req, res, next) => {
     Product.find()
@@ -101,13 +85,6 @@ export const getProducts = (req, res, next) => {
 };
 export const postDeleteProduct = (req, res, next) => {
     const prodId = req.body.productId;
-    //   Product.destroy({
-    //     where: {
-    //       id: prodId,
-    //     },
-    //   }).then(() => {
-    //     res.redirect("/admin/products");
-    //   });
     Product.findByIdAndRemove(prodId)
         .then(() => {
         res.redirect("/admin/products");

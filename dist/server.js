@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import User from "./models/user.js";
 import MongoDBStore from "connect-mongodb-session";
 import csrf from "csurf";
+import flash from "connect-flash";
 const MongoStore = MongoDBStore(sessions);
 dotenv.config();
 let conn_string;
@@ -38,6 +39,7 @@ app.use(sessions({
     store: store,
 }));
 app.use(csrfProtection);
+app.use(flash());
 app.use((req, res, next) => {
     if (!req.session.user) {
         return next();

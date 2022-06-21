@@ -7,7 +7,6 @@ export const getProducts = (req, res, next) => {
             products: products,
             pageTitle: "All Products",
             path: "/products",
-            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {
@@ -51,7 +50,6 @@ export const getCart = (req, res, next) => {
             path: "/cart",
             pageTitle: "Your Cart",
             products: products,
-            isAuthenticated: req.session.isLoggedIn,
         });
     }).catch((err) => console.log(err));
 };
@@ -83,7 +81,6 @@ export const getOrders = (req, res, next) => {
             orders: orders,
             pageTitle: "Your Orders",
             path: "/orders",
-            isAuthenticated: req.session.isLoggedIn,
         });
     })
         .catch((err) => {

@@ -1,11 +1,10 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 export const getLogin = (req, res, next) => {
-    const isLoggedIn = req.session.isLoggedIn;
     res.render("auth/login", {
         pageTitle: "Login",
         path: "/login",
-        isAuthenticated: isLoggedIn,
+        errorMessage: req.flash("error"),
     });
 };
 export const postLogin = (req, res, next) => {
@@ -13,6 +12,7 @@ export const postLogin = (req, res, next) => {
     User.findOne({ email: email })
         .then((user) => {
         if (!user) {
+            req.flash("error", "Invalid email or password");
             return res.redirect("/login");
         }
         bcrypt.compare(password, user.password, (err, result) => {
