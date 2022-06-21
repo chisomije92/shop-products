@@ -36,8 +36,25 @@ export const getSignup = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export const postSignup = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {};
+export const postSignup = (req: Request, res: Response, next: NextFunction) => {
+  const email: string = req.body.email;
+  const password: string = req.body.password;
+  const confirmedPassword: string = req.body.confirmedPassword;
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+      const user = new User({
+        email: email,
+        password: password,
+        cart: { items: [] },
+      });
+      user.save();
+      return user;
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((err) => console.log(err));
+};

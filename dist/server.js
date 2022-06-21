@@ -63,16 +63,6 @@ app.use(get404Page);
 mongoose
     .connect(conn_string)
     .then(() => {
-    User.findOne().then((user) => {
-        if (!user) {
-            const user = new User({
-                name: "Jerry",
-                email: "test@test.com",
-                cart: { items: [] },
-            });
-            user.save();
-        }
-    });
     app.listen(3000);
 })
     .catch((err) => {

@@ -30,5 +30,26 @@ export const getSignup = (req, res, next) => {
         isAuthenticated: false,
     });
 };
-export const postSignup = (req, res, next) => { };
+export const postSignup = (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const confirmedPassword = req.body.confirmedPassword;
+    User.findOne({ email: email })
+        .then((userDoc) => {
+        if (userDoc) {
+            return res.redirect("/signup");
+        }
+        const user = new User({
+            email: email,
+            password: password,
+            cart: { items: [] },
+        });
+        user.save();
+        return user;
+    })
+        .then((result) => {
+        res.redirect("/login");
+    })
+        .catch((err) => console.log(err));
+};
 //# sourceMappingURL=auth.js.map

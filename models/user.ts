@@ -12,13 +12,13 @@ export interface CartItemType {
 
 export interface UserType {
   id?: Types.ObjectId;
-  name: string;
+  password: string;
   email: string;
   cart: CartItemType;
 }
 
 const UserSchema = new Schema<UserType>({
-  name: {
+  password: {
     type: String,
     required: true,
   },
