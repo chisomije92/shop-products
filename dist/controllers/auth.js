@@ -23,4 +23,12 @@ export const postLogout = (req, res, next) => {
         res.redirect("/");
     });
 };
+export const getSignup = (req, res, next) => {
+    res.render("auth/signup", {
+        pageTitle: "Signup",
+        path: "/signup",
+        isAuthenticated: false,
+    });
+};
+export const postSignup = (req, res, next) => { };
 //# sourceMappingURL=auth.js.map
