@@ -1,10 +1,31 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 export const getLogin = (req, res, next) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    }
+    else {
+        message = null;
+    }
     res.render("auth/login", {
         pageTitle: "Login",
         path: "/login",
-        errorMessage: req.flash("error"),
+        errorMessage: message,
+    });
+};
+export const getSignup = (req, res, next) => {
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    }
+    else {
+        message = null;
+    }
+    res.render("auth/signup", {
+        pageTitle: "Signup",
+        path: "/signup",
+        errorMessage: message,
     });
 };
 export const postLogin = (req, res, next) => {
@@ -35,13 +56,6 @@ export const postLogout = (req, res, next) => {
         res.redirect("/");
     });
 };
-export const getSignup = (req, res, next) => {
-    res.render("auth/signup", {
-        pageTitle: "Signup",
-        path: "/signup",
-        isAuthenticated: false,
-    });
-};
 export const postSignup = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -49,6 +63,7 @@ export const postSignup = (req, res, next) => {
     User.findOne({ email: email })
         .then((userDoc) => {
         if (userDoc) {
+            req.flash("error", "User already exists. Use another email.");
             return res.redirect("/signup");
         }
         return bcrypt.hash(password, 12).then((hashedPassword) => {
