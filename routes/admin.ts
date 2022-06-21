@@ -7,14 +7,15 @@ import {
   postDeleteProduct,
   postEditProduct,
 } from "../controllers/admin.js";
+import isAuth from "../middleware/is-auth.js";
 
 const router = express.Router();
 
-router.get("/add-product", getAddProduct);
-router.get("/products", getProducts);
+router.get("/add-product", isAuth, getAddProduct);
+router.get("/products", isAuth, getProducts);
 
-router.post("/add-product", postAddProduct);
-router.get("/edit-product/:productId", getEditProduct);
-router.post("/edit-product", postEditProduct);
-router.post("/delete-product", postDeleteProduct);
+router.post("/add-product", isAuth, postAddProduct);
+router.get("/edit-product/:productId", isAuth, getEditProduct);
+router.post("/edit-product", isAuth, postEditProduct);
+router.post("/delete-product", isAuth, postDeleteProduct);
 export default router;
