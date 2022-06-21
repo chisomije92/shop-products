@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import bcrypt from "bcryptjs";
 export const getLogin = (req, res, next) => {
     const isLoggedIn = req.session.isLoggedIn;
     res.render("auth/login", {
@@ -39,16 +40,16 @@ export const postSignup = (req, res, next) => {
         if (userDoc) {
             return res.redirect("/signup");
         }
-        const user = new User({
-            email: email,
-            password: password,
-            cart: { items: [] },
+        return bcrypt.hash(password, 12).then((hashedPassword) => {
+            const user = new User({
+                email: email,
+                password: hashedPassword,
+                cart: { items: [] },
+            });
+            return user.save().then((result) => {
+                res.redirect("/login");
+            });
         });
-        user.save();
-        return user;
-    })
-        .then((result) => {
-        res.redirect("/login");
     })
         .catch((err) => console.log(err));
 };
