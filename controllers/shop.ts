@@ -45,8 +45,6 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
         products: products,
         pageTitle: "Shop",
         path: "/",
-        isAuthenticated: req.session.isLoggedIn,
-        csrfToken: req.csrfToken(),
       });
     })
     .catch((err: Error) => {
