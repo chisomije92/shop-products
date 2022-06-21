@@ -15,11 +15,11 @@ import isAuth from "../middleware/is-auth.js";
 const router = express.Router();
 
 router.get("/", getIndex);
-router.get("/cart", getCart);
+router.get("/cart", isAuth, getCart);
 router.post("/cart", isAuth, postCart);
 router.post("/create-order", isAuth, postOrder);
 router.post("/cart-delete-item", isAuth, deleteCartProduct);
-router.get("/products", isAuth, getProducts);
+router.get("/products", getProducts);
 router.get("/products/:productId", isAuth, getProduct);
 router.get("/orders", isAuth, getOrders);
 

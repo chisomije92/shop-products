@@ -10,6 +10,7 @@ import sessions from "express-session";
 import dotenv from "dotenv";
 import User from "./models/user.js";
 import MongoDBStore from "connect-mongodb-session";
+import csrf from "csurf";
 const MongoStore = MongoDBStore(sessions);
 dotenv.config();
 let conn_string;
@@ -25,6 +26,7 @@ const store = new MongoStore({
     uri: conn_string,
     collection: "sessions",
 });
+const csrfProtection = csrf();
 app.set("view engine", "ejs");
 app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,16 +37,7 @@ app.use(sessions({
     saveUninitialized: false,
     store: store,
 }));
-// app.use((req, res, next) => {
-//   User.findById("62a89fa640132445849b1e25")
-//     .then((user) => {
-//       req.user = user;
-//       next();
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
+app.use(csrfProtection);
 app.use((req, res, next) => {
     if (!req.session.user) {
         return next();
