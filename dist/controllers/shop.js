@@ -102,7 +102,7 @@ export const postOrder = (req, res, next) => {
         });
         const order = new Order({
             user: {
-                name: (_a = req.user) === null || _a === void 0 ? void 0 : _a.name,
+                email: (_a = req.user) === null || _a === void 0 ? void 0 : _a.email,
                 userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b._id,
             },
             products: products,

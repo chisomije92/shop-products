@@ -8,7 +8,7 @@ export interface OrderType {
   products: ProductType[];
   quantity: number;
   user: {
-    name: string;
+    email: string;
     userId: Types.ObjectId;
   };
 }
@@ -27,7 +27,7 @@ const OrderSchema = new Schema<OrderType>({
     },
   ],
   user: {
-    name: {
+    email: {
       type: String,
       required: true,
     },
