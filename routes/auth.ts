@@ -6,6 +6,7 @@ import {
   getSignup,
   postLogin,
   postLogout,
+  postNewPassword,
   postReset,
   postSignup,
 } from "../controllers/auth.js";
@@ -27,5 +28,7 @@ router.get("/reset", getReset);
 router.post("/reset", postReset);
 
 router.get("/reset/:token", getNewPassword);
+
+router.post("/new-password", postNewPassword);
 
 export default router;

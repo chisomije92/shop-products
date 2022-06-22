@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import user from "../models/user.js";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -179,6 +180,37 @@ export const getNewPassword = (
       path: "/new-password",
       errorMessage: message,
       userId: user?._id.toString(),
+      passwordToken: token,
     });
   });
+};
+
+export const postNewPassword = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let resetUser: any;
+  const newPassword = req.body.password;
+  const { userId, passwordToken } = req.body;
+  user
+    .findOne({
+      resetToken: passwordToken,
+      resetTokenExpiration: { $gt: Date.now() },
+      _id: userId,
+    })
+    .then((user) => {
+      resetUser = user;
+      return bcrypt.hash(newPassword, 12);
+    })
+    .then((hashedPassword) => {
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = undefined;
+      resetUser.resetTokenExpiration = undefined;
+      return resetUser.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((err) => console.log(err));
 };
