@@ -15,6 +15,8 @@ export interface UserType {
   password: string;
   email: string;
   cart: CartItemType;
+  resetToken?: string;
+  resetTokenExpiration?: Date | number;
 }
 
 const UserSchema = new Schema<UserType>({
@@ -38,6 +40,8 @@ const UserSchema = new Schema<UserType>({
       },
     ],
   },
+  resetToken: String,
+  resetTokenExpiration: Date || Number,
 });
 
 UserSchema.methods.addToCart = function (product: any) {

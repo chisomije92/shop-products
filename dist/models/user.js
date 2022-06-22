@@ -21,6 +21,8 @@ const UserSchema = new Schema({
             },
         ],
     },
+    resetToken: String,
+    resetTokenExpiration: Date || Number,
 });
 UserSchema.methods.addToCart = function (product) {
     const cartProductIndex = this.cart.items.findIndex((item) => {

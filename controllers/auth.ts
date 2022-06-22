@@ -3,7 +3,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-
+import crypto from "crypto";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -99,10 +99,6 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
               subject: "Signup succeeded",
               html: "<h1>You successfully signed up!</h1>",
             })
-            .then((info) => {
-              console.log(info);
-              return info;
-            })
             .catch((err) => {
               console.log(err);
             });
@@ -123,5 +119,41 @@ export const getReset = (req: Request, res: Response, next: NextFunction) => {
     pageTitle: "Reset Password",
     path: "/reset",
     errorMessage: message,
+  });
+};
+
+export const postReset = (req: Request, res: Response, next: NextFunction) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/reset");
+    }
+    const token = buffer.toString("hex");
+    User.findOne({
+      email: req.body.email,
+    })
+      .then((user) => {
+        if (!user) {
+          req.flash("error", "Email not found!");
+          return res.redirect("/reset");
+        }
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        user.save();
+        return user;
+      })
+      .then((result) => {
+        res.redirect("/");
+        return transporter.sendMail({
+          from: "chisomije92@gmail.com",
+          to: req.body.email,
+          subject: "Password Reset",
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>  
+          `,
+        });
+      })
+      .catch((err) => console.log(err));
   });
 };
