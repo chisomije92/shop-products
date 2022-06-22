@@ -55,22 +55,26 @@ export const postEditProduct = (req, res, next) => {
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
     const updatedDescription = req.body.description;
-    Product.findById(prodId)
-        .then((product) => {
-        product.title = updatedTitle;
-        product.price = updatedPrice;
-        product.description = updatedDescription;
-        product.imageUrl = updatedImageUrl;
-        return product.save();
-    })
-        .then(() => {
-        res.redirect("/admin/products");
+    Product.findById(prodId).then((product) => {
+        var _a;
+        if ((product === null || product === void 0 ? void 0 : product.userId.toString()) !== ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id.toString())) {
+            return res.redirect("/");
+        }
+        else {
+            product.title = updatedTitle;
+            product.price = updatedPrice;
+            product.description = updatedDescription;
+            product.imageUrl = updatedImageUrl;
+            return product.save().then(() => {
+                res.redirect("/admin/products");
+            });
+        }
     });
 };
 export const getProducts = (req, res, next) => {
     var _a;
     Product.find({
-        userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
+        userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
     })
         // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
         // .populate("userId") // this is to populate the userId field with the user details
@@ -87,8 +91,12 @@ export const getProducts = (req, res, next) => {
     });
 };
 export const postDeleteProduct = (req, res, next) => {
+    var _a;
     const prodId = req.body.productId;
-    Product.findByIdAndRemove(prodId)
+    Product.deleteOne({
+        _id: prodId,
+        userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+    })
         .then(() => {
         res.redirect("/admin/products");
     })

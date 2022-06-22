@@ -78,17 +78,19 @@ export const postEditProduct = (
   const updatedImageUrl: string = req.body.imageUrl;
   const updatedDescription: string = req.body.description;
 
-  Product.findById(prodId)
-    .then((product) => {
+  Product.findById(prodId).then((product) => {
+    if (product?.userId.toString() !== req.user?.id.toString()) {
+      return res.redirect("/");
+    } else {
       product!.title = updatedTitle;
       product!.price = updatedPrice;
       product!.description = updatedDescription;
       product!.imageUrl = updatedImageUrl;
-      return product!.save();
-    })
-    .then(() => {
-      res.redirect("/admin/products");
-    });
+      return product!.save().then(() => {
+        res.redirect("/admin/products");
+      });
+    }
+  });
 };
 
 export const getProducts = (
@@ -97,7 +99,7 @@ export const getProducts = (
   next: NextFunction
 ) => {
   Product.find({
-    userId: req.user?._id,
+    userId: req.user?.id,
   })
     // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
     // .populate("userId") // this is to populate the userId field with the user details
@@ -121,7 +123,10 @@ export const postDeleteProduct = (
 ) => {
   const prodId: string = req.body.productId;
 
-  Product.findByIdAndRemove(prodId)
+  Product.deleteOne({
+    _id: prodId,
+    userId: req.user?.id,
+  })
     .then(() => {
       res.redirect("/admin/products");
     })
