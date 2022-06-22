@@ -68,7 +68,10 @@ export const postEditProduct = (req, res, next) => {
     });
 };
 export const getProducts = (req, res, next) => {
-    Product.find()
+    var _a;
+    Product.find({
+        userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
+    })
         // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
         // .populate("userId") // this is to populate the userId field with the user details
         .then((products) => {
