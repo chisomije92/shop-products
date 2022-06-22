@@ -157,3 +157,28 @@ export const postReset = (req: Request, res: Response, next: NextFunction) => {
       .catch((err) => console.log(err));
   });
 };
+
+export const getNewPassword = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.params.token;
+  User.findOne({
+    resetToken: token,
+    resetTokenExpiration: { $gt: Date.now() },
+  }).then((user) => {
+    let message: string[] | string | null = req.flash("error");
+    if (message.length > 0) {
+      message = message[0];
+    } else {
+      message = null;
+    }
+    res.render("auth/new-password", {
+      pageTitle: "New Password",
+      path: "/new-password",
+      errorMessage: message,
+      userId: user?._id.toString(),
+    });
+  });
+};

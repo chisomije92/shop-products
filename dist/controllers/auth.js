@@ -151,4 +151,25 @@ export const postReset = (req, res, next) => {
             .catch((err) => console.log(err));
     });
 };
+export const getNewPassword = (req, res, next) => {
+    const token = req.params.token;
+    User.findOne({
+        resetToken: token,
+        resetTokenExpiration: { $gt: Date.now() },
+    }).then((user) => {
+        let message = req.flash("error");
+        if (message.length > 0) {
+            message = message[0];
+        }
+        else {
+            message = null;
+        }
+        res.render("auth/new-password", {
+            pageTitle: "New Password",
+            path: "/new-password",
+            errorMessage: message,
+            userId: user === null || user === void 0 ? void 0 : user._id.toString(),
+        });
+    });
+};
 //# sourceMappingURL=auth.js.map
