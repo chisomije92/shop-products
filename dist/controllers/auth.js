@@ -1,5 +1,17 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import nodemailer from "nodemailer";
+dotenv.config();
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_PASSWORD,
+    },
+});
 export const getLogin = (req, res, next) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -74,6 +86,20 @@ export const postSignup = (req, res, next) => {
             });
             return user.save().then((result) => {
                 res.redirect("/login");
+                return transporter
+                    .sendMail({
+                    from: "chisomije92@gmail.com",
+                    to: email,
+                    subject: "Signup succeeded",
+                    html: "<h1>You successfully signed up!</h1>",
+                })
+                    .then((info) => {
+                    console.log(info);
+                    return info;
+                })
+                    .catch((err) => {
+                    console.log(err);
+                });
             });
         });
     })
