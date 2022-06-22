@@ -111,3 +111,17 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
     })
     .catch((err) => console.log(err));
 };
+
+export const getReset = (req: Request, res: Response, next: NextFunction) => {
+  let message: string[] | string | null = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("auth/reset", {
+    pageTitle: "Reset Password",
+    path: "/reset",
+    errorMessage: message,
+  });
+};
