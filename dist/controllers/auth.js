@@ -77,7 +77,6 @@ export const postSignup = (req, res, next) => {
     const confirmedPassword = req.body.confirmedPassword;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log(errors.array());
         return res.status(422).render("auth/signup", {
             pageTitle: "Signup",
             path: "/signup",
