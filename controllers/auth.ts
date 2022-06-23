@@ -80,7 +80,7 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         return res.status(422).render("auth/login", {
           pageTitle: "Login",
           path: "/login",
-          errorMessage: "Invalid email or password",
+          errorMessage: "Invalid email or password!",
           oldInput: {
             email: email,
             password: password,
