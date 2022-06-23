@@ -27,6 +27,11 @@ export const getLogin = (req, res, next) => {
         pageTitle: "Login",
         path: "/login",
         errorMessage: message,
+        oldInput: {
+            email: "",
+            password: "",
+        },
+        validationErrors: [],
     });
 };
 export const getSignup = (req, res, next) => {
@@ -46,6 +51,7 @@ export const getSignup = (req, res, next) => {
             password: "",
             confirmPassword: "",
         },
+        validationErrors: [],
     });
 };
 export const postLogin = (req, res, next) => {
@@ -60,13 +66,22 @@ export const postLogin = (req, res, next) => {
                 email: email,
                 password: password,
             },
+            validationErrors: errors.array(),
         });
     }
     User.findOne({ email: email })
         .then((user) => {
         if (!user) {
-            req.flash("error", "Invalid email or password");
-            return res.redirect("/login");
+            return res.status(422).render("auth/login", {
+                pageTitle: "Login",
+                path: "/login",
+                errorMessage: "Invalid email or password",
+                oldInput: {
+                    email: email,
+                    password: password,
+                },
+                validationErrors: [],
+            });
         }
         bcrypt.compare(password, user.password, (err, result) => {
             if (result) {
@@ -77,7 +92,16 @@ export const postLogin = (req, res, next) => {
                 });
             }
             else {
-                return res.redirect("/login");
+                return res.status(422).render("auth/login", {
+                    pageTitle: "Login",
+                    path: "/login",
+                    errorMessage: "Invalid email or password",
+                    oldInput: {
+                        email: email,
+                        password: password,
+                    },
+                    validationErrors: [],
+                });
             }
         });
     })
@@ -101,6 +125,7 @@ export const postSignup = (req, res, next) => {
                 password: password,
                 confirmPassword: confirmPassword,
             },
+            validationErrors: errors.array(),
         });
     }
     User.findOne({ email: email })

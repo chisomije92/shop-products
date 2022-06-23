@@ -30,6 +30,11 @@ export const getLogin = (req: Request, res: Response, next: NextFunction) => {
     pageTitle: "Login",
     path: "/login",
     errorMessage: message,
+    oldInput: {
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
@@ -49,6 +54,7 @@ export const getSignup = (req: Request, res: Response, next: NextFunction) => {
       password: "",
       confirmPassword: "",
     },
+    validationErrors: [],
   });
 };
 
@@ -65,13 +71,22 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         email: email,
         password: password,
       },
+      validationErrors: errors.array(),
     });
   }
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        req.flash("error", "Invalid email or password");
-        return res.redirect("/login");
+        return res.status(422).render("auth/login", {
+          pageTitle: "Login",
+          path: "/login",
+          errorMessage: "Invalid email or password",
+          oldInput: {
+            email: email,
+            password: password,
+          },
+          validationErrors: [],
+        });
       }
       bcrypt.compare(password, user.password, (err, result) => {
         if (result) {
@@ -81,7 +96,16 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
             return res.redirect("/");
           });
         } else {
-          return res.redirect("/login");
+          return res.status(422).render("auth/login", {
+            pageTitle: "Login",
+            path: "/login",
+            errorMessage: "Invalid email or password",
+            oldInput: {
+              email: email,
+              password: password,
+            },
+            validationErrors: [],
+          });
         }
       });
     })
@@ -107,6 +131,7 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
         password: password,
         confirmPassword: confirmPassword,
       },
+      validationErrors: errors.array(),
     });
   }
   User.findOne({ email: email })
