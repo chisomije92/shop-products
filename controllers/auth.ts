@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import user from "../models/user.js";
+import { validationResult } from "express-validator";
+
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -78,6 +80,15 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
   const email: string = req.body.email;
   const password: string = req.body.password;
   const confirmedPassword: string = req.body.confirmedPassword;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render("auth/signup", {
+      pageTitle: "Signup",
+      path: "/signup",
+      errorMessage: errors.array()[0].msg,
+    });
+  }
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {

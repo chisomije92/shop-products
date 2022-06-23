@@ -10,6 +10,7 @@ import {
   postReset,
   postSignup,
 } from "../controllers/auth.js";
+import { check, body } from "express-validator";
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post("/login", postLogin);
 
 router.post("/logout", postLogout);
 
-router.post("/signup", postSignup);
+router.post("/signup", check("email").isEmail(), postSignup);
 
 router.get("/reset", getReset);
 
