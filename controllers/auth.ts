@@ -49,6 +49,15 @@ export const getSignup = (req: Request, res: Response, next: NextFunction) => {
 
 export const postLogin = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", {
+      pageTitle: "Login",
+      path: "/login",
+      errorMessage: errors.array()[0].msg,
+    });
+  }
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
