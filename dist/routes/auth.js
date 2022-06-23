@@ -21,6 +21,12 @@ router.post("/signup", [
     body("password", "Password must be at least 5 characters and must be numbers and text")
         .isLength({ min: 5 })
         .isAlphanumeric(),
+    body("confirmPassword").custom((value, { req }) => {
+        if (value !== req.body.password) {
+            throw new Error("Passwords don't match!");
+        }
+        return true;
+    }),
 ], postSignup);
 router.get("/reset", getReset);
 router.post("/reset", postReset);
