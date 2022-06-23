@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Product from "../models/product.js";
+import { validationResult } from "express-validator";
 
 export const getAddProduct = (
   req: Request,
@@ -10,6 +11,9 @@ export const getAddProduct = (
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    hasError: false,
+    errorMessage: null,
+    validationErrors: [],
   });
 };
 
@@ -22,6 +26,24 @@ export const postAddProduct = (
   const imageUrl: string = req.body.imageUrl;
   const price: number = req.body.price;
   const description: string = req.body.description;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        imageUrl: imageUrl,
+        price: price,
+        description: description,
+      },
+      errorMessage: errors.array()[0].msg,
+      validationErrors: errors.array(),
+    });
+  }
   const product = new Product({
     title: title,
     price: price,
@@ -59,7 +81,10 @@ export const getEditProduct = (
         pageTitle: "Edit Product",
         path: "/admin/edit-product",
         editing: editMode,
-        product,
+        hasError: false,
+        errorMessage: null,
+        product: product,
+        validationErrors: [],
       });
     })
     .catch((err: Error) => {
@@ -77,6 +102,24 @@ export const postEditProduct = (
   const updatedPrice: number = req.body.price;
   const updatedImageUrl: string = req.body.imageUrl;
   const updatedDescription: string = req.body.description;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing: true,
+      hasError: true,
+      product: {
+        title: updatedTitle,
+        price: updatedPrice,
+        description: updatedDescription,
+        imageUrl: updatedImageUrl,
+      },
+      errorMessage: errors.array()[0].msg,
+      validationErrors: errors.array(),
+    });
+  }
 
   Product.findById(prodId).then((product) => {
     if (product?.userId.toString() !== req.user?.id.toString()) {
