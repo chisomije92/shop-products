@@ -44,6 +44,11 @@ export const getSignup = (req: Request, res: Response, next: NextFunction) => {
     pageTitle: "Signup",
     path: "/signup",
     errorMessage: message,
+    oldInput: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 };
 
@@ -56,6 +61,10 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
       pageTitle: "Login",
       path: "/login",
       errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+      },
     });
   }
   User.findOne({ email: email })
@@ -86,15 +95,18 @@ export const postLogout = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const postSignup = (req: Request, res: Response, next: NextFunction) => {
-  const email: string = req.body.email;
-  const password: string = req.body.password;
-  const confirmedPassword: string = req.body.confirmedPassword;
+  const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/signup", {
       pageTitle: "Signup",
       path: "/signup",
       errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      },
     });
   }
   User.findOne({ email: email })
