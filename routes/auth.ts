@@ -25,16 +25,24 @@ router.post("/logout", postLogout);
 
 router.post(
   "/signup",
-  check("email")
-    .isEmail()
-    .withMessage("Please enter a valid email")
-    .custom((value) => {
-      return User.findOne({ email: value }).then((userDoc) => {
-        if (userDoc) {
-          return Promise.reject("Email already exists");
-        }
-      });
-    }),
+  [
+    check("email")
+      .isEmail()
+      .withMessage("Please enter a valid email")
+      .custom((value) => {
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (userDoc) {
+            return Promise.reject("Email already exists");
+          }
+        });
+      }),
+    body(
+      "password",
+      "Password must be at least 5 characters and must be numbers and text"
+    )
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+  ],
   postSignup
 );
 
