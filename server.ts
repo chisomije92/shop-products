@@ -1,4 +1,5 @@
 import express from "express";
+import { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 import adminRoute from "./routes/admin.js";
 import shopRoute from "./routes/shop.js";
@@ -71,8 +72,12 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(authRoute);
-app.use(get404Page);
 app.get("/500", get500Page);
+app.use(get404Page);
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  res.redirect("/500");
+});
 
 mongoose
   .connect(conn_string)

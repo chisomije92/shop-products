@@ -62,8 +62,11 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(authRoute);
-app.use(get404Page);
 app.get("/500", get500Page);
+app.use(get404Page);
+app.use((error, req, res, next) => {
+    res.redirect("/500");
+});
 mongoose
     .connect(conn_string)
     .then(() => {

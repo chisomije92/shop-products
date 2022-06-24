@@ -58,7 +58,7 @@ export const postAddProduct = (
     .then(() => {
       res.redirect("/admin/products");
     })
-    .catch((err: Error) => {
+    .catch((err: any) => {
       // console.log(err);
       // return res.status(500).render("admin/edit-product", {
       //   pageTitle: "Add Product",
@@ -74,7 +74,11 @@ export const postAddProduct = (
       //   errorMessage: "Database operation failed, please try again.",
       //   validationErrors: [],
       // });
-      res.redirect("/500");
+      // res.redirect("/500");
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -103,8 +107,11 @@ export const getEditProduct = (
         validationErrors: [],
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -170,8 +177,11 @@ export const getProducts = (
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -189,7 +199,10 @@ export const postDeleteProduct = (
     .then(() => {
       res.redirect("/admin/products");
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
