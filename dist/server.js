@@ -12,6 +12,7 @@ import User from "./models/user.js";
 import MongoDBStore from "connect-mongodb-session";
 import csrf from "csurf";
 import flash from "connect-flash";
+import { get500Page } from "./controllers/500.js";
 const MongoStore = MongoDBStore(sessions);
 dotenv.config();
 let conn_string;
@@ -49,7 +50,9 @@ app.use((req, res, next) => {
         req.user = user;
         next();
     })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+        throw new Error(err);
+    });
 });
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isLoggedIn;
@@ -60,6 +63,7 @@ app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(authRoute);
 app.use(get404Page);
+app.get("/500", get500Page);
 mongoose
     .connect(conn_string)
     .then(() => {
