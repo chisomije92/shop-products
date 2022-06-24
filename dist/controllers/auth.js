@@ -105,7 +105,12 @@ export const postLogin = (req, res, next) => {
             }
         });
     })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 export const postLogout = (req, res, next) => {
     req.session.destroy(() => {
@@ -155,7 +160,12 @@ export const postSignup = (req, res, next) => {
             });
         });
     })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 export const getReset = (req, res, next) => {
     let message = req.flash("error");
@@ -203,7 +213,12 @@ export const postReset = (req, res, next) => {
           `,
             });
         })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+            const error = new Error(err);
+            //@ts-ignore
+            error.httpStatusCode = 500;
+            return next(error);
+        });
     });
 };
 export const getNewPassword = (req, res, next) => {
@@ -251,6 +266,11 @@ export const postNewPassword = (req, res, next) => {
         .then((result) => {
         res.redirect("/login");
     })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
+    });
 };
 //# sourceMappingURL=auth.js.map

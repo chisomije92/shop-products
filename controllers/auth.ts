@@ -109,7 +109,12 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         }
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 export const postLogout = (req: Request, res: Response, next: NextFunction) => {
@@ -162,7 +167,12 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
         });
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 export const getReset = (req: Request, res: Response, next: NextFunction) => {
@@ -211,7 +221,12 @@ export const postReset = (req: Request, res: Response, next: NextFunction) => {
           `,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
+      });
   });
 };
 
@@ -268,5 +283,10 @@ export const postNewPassword = (
     .then((result) => {
       res.redirect("/login");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
