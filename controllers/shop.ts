@@ -16,8 +16,11 @@ export const getProducts = (
         path: "/products",
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -32,8 +35,11 @@ export const getProduct = (req: Request, res: Response, next: NextFunction) => {
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -88,8 +94,13 @@ export const deleteCartProduct = (
     .then(() => {
       res.redirect("/cart");
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      {
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
+      }
     });
 };
 
@@ -102,8 +113,11 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
         path: "/orders",
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -132,7 +146,10 @@ export const postOrder = (req: Request, res: Response, next: NextFunction) => {
     .then(() => {
       res.redirect("/orders");
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };

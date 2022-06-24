@@ -10,7 +10,10 @@ export const getProducts = (req, res, next) => {
         });
     })
         .catch((err) => {
-        console.log(err);
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
     });
 };
 export const getProduct = (req, res, next) => {
@@ -25,7 +28,10 @@ export const getProduct = (req, res, next) => {
         });
     })
         .catch((err) => {
-        console.log(err);
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
     });
 };
 export const getIndex = (req, res, next) => {
@@ -70,7 +76,12 @@ export const deleteCartProduct = (req, res, next) => {
     (_a = req.user) === null || _a === void 0 ? void 0 : _a.deleteItemFromCart(prodId).then(() => {
         res.redirect("/cart");
     }).catch((err) => {
-        console.log(err);
+        {
+            const error = new Error(err);
+            //@ts-ignore
+            error.httpStatusCode = 500;
+            return next(error);
+        }
     });
 };
 export const getOrders = (req, res, next) => {
@@ -84,7 +95,10 @@ export const getOrders = (req, res, next) => {
         });
     })
         .catch((err) => {
-        console.log(err);
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
     });
 };
 export const postOrder = (req, res, next) => {
@@ -111,7 +125,10 @@ export const postOrder = (req, res, next) => {
     }).then(() => {
         res.redirect("/orders");
     }).catch((err) => {
-        console.log(err);
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
     });
 };
 //# sourceMappingURL=shop.js.map
