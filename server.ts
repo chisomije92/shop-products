@@ -14,6 +14,7 @@ import MongoDBStore from "connect-mongodb-session";
 import csrf from "csurf";
 import flash from "connect-flash";
 import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 import { get500Page } from "./controllers/500.js";
 
 const MongoStore = MongoDBStore(sessions);
@@ -36,16 +37,20 @@ const store = new MongoStore({
 });
 
 const csrfProtection = csrf();
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, uuidv4() + "-" + file.originalname);
+  },
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  multer({
-    dest: "images",
-  }).single("image")
-);
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   sessions({
@@ -55,8 +60,14 @@ app.use(
     store: store,
   })
 );
+app.use(
+  multer({
+    storage: fileStorage,
+  }).single("image")
+);
 app.use(csrfProtection);
 app.use(flash());
+
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();

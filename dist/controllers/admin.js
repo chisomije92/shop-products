@@ -29,6 +29,7 @@ export const postAddProduct = (req, res, next) => {
                 price: price,
                 description: description,
             },
+            // csrfToken: req.csrfToken(),
             errorMessage: errors.array()[0].msg,
             validationErrors: errors.array(),
         });
