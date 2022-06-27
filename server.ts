@@ -13,6 +13,7 @@ import User from "./models/user.js";
 import MongoDBStore from "connect-mongodb-session";
 import csrf from "csurf";
 import flash from "connect-flash";
+import multer from "multer";
 import { get500Page } from "./controllers/500.js";
 
 const MongoStore = MongoDBStore(sessions);
@@ -38,7 +39,13 @@ const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
+
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  multer({
+    dest: "images",
+  }).single("image")
+);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   sessions({

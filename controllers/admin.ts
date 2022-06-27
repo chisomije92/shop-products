@@ -24,11 +24,11 @@ export const postAddProduct = (
   next: NextFunction
 ) => {
   const title: string = req.body.title;
-  const imageUrl: string = req.body.image;
+  const imageUrl: Express.Multer.File | undefined = req.file;
   const price: number = req.body.price;
   const description: string = req.body.description;
   const errors = validationResult(req);
-
+  console.log(imageUrl);
   if (!errors.isEmpty()) {
     return res.render("admin/edit-product", {
       pageTitle: "Add Product",
