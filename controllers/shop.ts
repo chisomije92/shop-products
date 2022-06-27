@@ -157,25 +157,37 @@ export const postOrder = (req: Request, res: Response, next: NextFunction) => {
 
 export const getInvoice = (req: Request, res: Response, next: NextFunction) => {
   const orderId = req.params.orderId;
-  Order.findById(orderId).then((order) => {
-    if (!order) {
-      return next(new Error("No order found."));
-    }
-    if (order.user.userId.toString() !== req.user?._id.toString()) {
-      return next(new Error("Unauthorized"));
-    }
-    const invoiceName = "invoice-" + orderId + ".pdf";
-    const invoicePath = path.join("data", "invoices", invoiceName);
-    fs.readFile(invoicePath, (err: any, data: any) => {
-      if (err) {
-        return next(err);
+  Order.findById(orderId)
+    .then((order) => {
+      if (!order) {
+        return next(new Error("No order found."));
       }
+      if (order.user.userId.toString() !== req.user?._id.toString()) {
+        return next(new Error("Unauthorized"));
+      }
+      const invoiceName = "invoice-" + orderId + ".pdf";
+      const invoicePath = path.join("data", "invoices", invoiceName);
+      // fs.readFile(invoicePath, (err: any, data: any) => {
+      //   if (err) {
+      //     return next(err);
+      //   }
+      // res.contentType("application/pdf");
+      // res.setHeader(
+      //   "Content-Disposition",
+      //   "inline; filename=" + invoiceName + ""
+      // );
+      //   res.send(data);
+      // });
+      const file = fs.createReadStream(invoicePath);
+      res.setHeader("Content-Type", "application/pdf");
       res.contentType("application/pdf");
       res.setHeader(
         "Content-Disposition",
         "inline; filename=" + invoiceName + ""
       );
-      res.send(data);
+      file.pipe(res);
+    })
+    .catch((err: any) => {
+      return next(err);
     });
-  });
 };

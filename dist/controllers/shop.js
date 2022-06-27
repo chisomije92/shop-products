@@ -135,7 +135,8 @@ export const postOrder = (req, res, next) => {
 };
 export const getInvoice = (req, res, next) => {
     const orderId = req.params.orderId;
-    Order.findById(orderId).then((order) => {
+    Order.findById(orderId)
+        .then((order) => {
         var _a;
         if (!order) {
             return next(new Error("No order found."));
@@ -145,14 +146,25 @@ export const getInvoice = (req, res, next) => {
         }
         const invoiceName = "invoice-" + orderId + ".pdf";
         const invoicePath = path.join("data", "invoices", invoiceName);
-        fs.readFile(invoicePath, (err, data) => {
-            if (err) {
-                return next(err);
-            }
-            res.contentType("application/pdf");
-            res.setHeader("Content-Disposition", "inline; filename=" + invoiceName + "");
-            res.send(data);
-        });
+        // fs.readFile(invoicePath, (err: any, data: any) => {
+        //   if (err) {
+        //     return next(err);
+        //   }
+        // res.contentType("application/pdf");
+        // res.setHeader(
+        //   "Content-Disposition",
+        //   "inline; filename=" + invoiceName + ""
+        // );
+        //   res.send(data);
+        // });
+        const file = fs.createReadStream(invoicePath);
+        res.setHeader("Content-Type", "application/pdf");
+        res.contentType("application/pdf");
+        res.setHeader("Content-Disposition", "inline; filename=" + invoiceName + "");
+        file.pipe(res);
+    })
+        .catch((err) => {
+        return next(err);
     });
 };
 //# sourceMappingURL=shop.js.map
