@@ -10,7 +10,6 @@ router.post("/add-product", [
         .isString()
         .isLength({ min: 3 })
         .trim(),
-    body("imageUrl", "Set a valid image value").isURL(),
     body("price", "Set a valid price value").isFloat(),
     body("description", "Set a valid desc value").isLength({ min: 5 }).trim(),
 ], isAuth, postAddProduct);
@@ -20,7 +19,6 @@ router.post("/edit-product", [
         .isString()
         .isLength({ min: 3 })
         .trim(),
-    body("imageUrl", "Set a valid image value").isURL(),
     body("price", "Set a valid price value").isFloat(),
     body("description", "Set a valid desc value").isLength({ min: 5 }).trim(),
 ], isAuth, postEditProduct);
