@@ -1,4 +1,5 @@
 import path from "path";
+import PDFDocument from "pdfkit";
 import fs from "fs";
 import Product from "../models/product.js";
 import Order from "../models/order.js";
@@ -157,11 +158,33 @@ export const getInvoice = (req, res, next) => {
         // );
         //   res.send(data);
         // });
-        const file = fs.createReadStream(invoicePath);
-        res.setHeader("Content-Type", "application/pdf");
-        res.contentType("application/pdf");
-        res.setHeader("Content-Disposition", "inline; filename=" + invoiceName + "");
-        file.pipe(res);
+        // const file = fs.createReadStream(invoicePath);
+        // res.setHeader("Content-Type", "application/pdf");
+        // res.contentType("application/pdf");
+        // res.setHeader(
+        //   "Content-Disposition",
+        //   "inline; filename=" + invoiceName + ""
+        // );
+        // file.pipe(res);
+        const pdfDoc = new PDFDocument();
+        pdfDoc.pipe(fs.createWriteStream(invoicePath));
+        pdfDoc.pipe(res);
+        pdfDoc.fontSize(26).text("Invoice", { underline: true });
+        pdfDoc.text("--------------------");
+        let totalPrice = 0;
+        order.products.forEach((product) => {
+            totalPrice += product.quantity * product.product.price;
+            pdfDoc
+                .fontSize(16)
+                .text(product.product.title +
+                " - " +
+                product.quantity +
+                " x " +
+                product.product.price);
+        });
+        pdfDoc.text("--------------------");
+        pdfDoc.fontSize(20).text("Total Price: $" + totalPrice);
+        pdfDoc.end();
     })
         .catch((err) => {
         return next(err);
