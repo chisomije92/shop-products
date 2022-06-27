@@ -4,6 +4,7 @@ import {
   deleteCartProduct,
   getCart,
   getIndex,
+  getInvoice,
   getOrders,
   getProduct,
   getProducts,
@@ -22,5 +23,6 @@ router.post("/cart-delete-item", isAuth, deleteCartProduct);
 router.get("/products", getProducts);
 router.get("/products/:productId", isAuth, getProduct);
 router.get("/orders", isAuth, getOrders);
+router.get("/orders/:orderId", isAuth, getInvoice);
 
 export default router;

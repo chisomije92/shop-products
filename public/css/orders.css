@@ -27,3 +27,15 @@
   border: 1px solid #00695c;
   color: #00695c;
 }
+
+.order__product-id {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.order__product-id > a {
+  color: #00695c;
+  text-decoration: none;
+  margin-left: 12px;
+}

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-
+import path from "path";
+import fs from "fs";
 import Product, { ProductType } from "../models/product.js";
 import User, { UserType } from "../models/user.js";
 import Order from "../models/order.js";
@@ -152,4 +153,29 @@ export const postOrder = (req: Request, res: Response, next: NextFunction) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+};
+
+export const getInvoice = (req: Request, res: Response, next: NextFunction) => {
+  const orderId = req.params.orderId;
+  Order.findById(orderId).then((order) => {
+    if (!order) {
+      return next(new Error("No order found."));
+    }
+    if (order.user.userId.toString() !== req.user?._id.toString()) {
+      return next(new Error("Unauthorized"));
+    }
+    const invoiceName = "invoice-" + orderId + ".pdf";
+    const invoicePath = path.join("data", "invoices", invoiceName);
+    fs.readFile(invoicePath, (err: any, data: any) => {
+      if (err) {
+        return next(err);
+      }
+      res.contentType("application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        "inline; filename=" + invoiceName + ""
+      );
+      res.send(data);
+    });
+  });
 };

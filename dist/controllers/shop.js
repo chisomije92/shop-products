@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import Product from "../models/product.js";
 import Order from "../models/order.js";
 export const getProducts = (req, res, next) => {
@@ -129,6 +131,28 @@ export const postOrder = (req, res, next) => {
         //@ts-ignore
         error.httpStatusCode = 500;
         return next(error);
+    });
+};
+export const getInvoice = (req, res, next) => {
+    const orderId = req.params.orderId;
+    Order.findById(orderId).then((order) => {
+        var _a;
+        if (!order) {
+            return next(new Error("No order found."));
+        }
+        if (order.user.userId.toString() !== ((_a = req.user) === null || _a === void 0 ? void 0 : _a._id.toString())) {
+            return next(new Error("Unauthorized"));
+        }
+        const invoiceName = "invoice-" + orderId + ".pdf";
+        const invoicePath = path.join("data", "invoices", invoiceName);
+        fs.readFile(invoicePath, (err, data) => {
+            if (err) {
+                return next(err);
+            }
+            res.contentType("application/pdf");
+            res.setHeader("Content-Disposition", "inline; filename=" + invoiceName + "");
+            res.send(data);
+        });
     });
 };
 //# sourceMappingURL=shop.js.map
