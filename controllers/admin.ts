@@ -24,11 +24,29 @@ export const postAddProduct = (
   next: NextFunction
 ) => {
   const title: string = req.body.title;
-  const imageUrl: Express.Multer.File | undefined = req.file;
+  const image: Express.Multer.File | undefined = req.file;
   const price: number = req.body.price;
   const description: string = req.body.description;
+
+  if (!image) {
+    return res.status(400).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        price: price,
+        description: description,
+      },
+      errorMessage: "Invalid image file",
+      validationErrors: [],
+    });
+  }
+
+  const imageUrl = image.path;
   const errors = validationResult(req);
-  console.log(imageUrl);
+
   if (!errors.isEmpty()) {
     return res.render("admin/edit-product", {
       pageTitle: "Add Product",
@@ -37,7 +55,6 @@ export const postAddProduct = (
       hasError: true,
       product: {
         title: title,
-        imageUrl: imageUrl,
         price: price,
         description: description,
       },
@@ -108,7 +125,7 @@ export const postEditProduct = (
   const prodId: string = req.body.productId;
   const updatedTitle: string = req.body.title;
   const updatedPrice: number = req.body.price;
-  const updatedImageUrl: string = req.body.imageUrl;
+  const updatedImage: Express.Multer.File | undefined = req.file;
   const updatedDescription: string = req.body.description;
   const errors = validationResult(req);
 
@@ -122,7 +139,6 @@ export const postEditProduct = (
         title: updatedTitle,
         price: updatedPrice,
         description: updatedDescription,
-        imageUrl: updatedImageUrl,
       },
       errorMessage: errors.array()[0].msg,
       validationErrors: errors.array(),
@@ -136,7 +152,9 @@ export const postEditProduct = (
       product!.title = updatedTitle;
       product!.price = updatedPrice;
       product!.description = updatedDescription;
-      product!.imageUrl = updatedImageUrl;
+      if (updatedImage) {
+        product!.imageUrl = updatedImage.path;
+      }
       return product!.save().then(() => {
         res.redirect("/admin/products");
       });

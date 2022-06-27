@@ -12,11 +12,26 @@ export const getAddProduct = (req, res, next) => {
 };
 export const postAddProduct = (req, res, next) => {
     const title = req.body.title;
-    const imageUrl = req.file;
+    const image = req.file;
     const price = req.body.price;
     const description = req.body.description;
+    if (!image) {
+        return res.status(400).render("admin/edit-product", {
+            pageTitle: "Add Product",
+            path: "/admin/add-product",
+            editing: false,
+            hasError: true,
+            product: {
+                title: title,
+                price: price,
+                description: description,
+            },
+            errorMessage: "Invalid image file",
+            validationErrors: [],
+        });
+    }
+    const imageUrl = image.path;
     const errors = validationResult(req);
-    console.log(imageUrl);
     if (!errors.isEmpty()) {
         return res.render("admin/edit-product", {
             pageTitle: "Add Product",
@@ -25,7 +40,6 @@ export const postAddProduct = (req, res, next) => {
             hasError: true,
             product: {
                 title: title,
-                imageUrl: imageUrl,
                 price: price,
                 description: description,
             },
@@ -85,7 +99,7 @@ export const postEditProduct = (req, res, next) => {
     const prodId = req.body.productId;
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
-    const updatedImageUrl = req.body.imageUrl;
+    const updatedImage = req.file;
     const updatedDescription = req.body.description;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -98,7 +112,6 @@ export const postEditProduct = (req, res, next) => {
                 title: updatedTitle,
                 price: updatedPrice,
                 description: updatedDescription,
-                imageUrl: updatedImageUrl,
             },
             errorMessage: errors.array()[0].msg,
             validationErrors: errors.array(),
@@ -113,7 +126,9 @@ export const postEditProduct = (req, res, next) => {
             product.title = updatedTitle;
             product.price = updatedPrice;
             product.description = updatedDescription;
-            product.imageUrl = updatedImageUrl;
+            if (updatedImage) {
+                product.imageUrl = updatedImage.path;
+            }
             return product.save().then(() => {
                 res.redirect("/admin/products");
             });
