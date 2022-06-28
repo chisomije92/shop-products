@@ -3,6 +3,7 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import Product from "../models/product.js";
 import Order from "../models/order.js";
+const ITEMS_PER_PAGE = 2;
 export const getProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
@@ -38,8 +39,13 @@ export const getProduct = (req, res, next) => {
     });
 };
 export const getIndex = (req, res, next) => {
+    const page = req.query.page || 1;
     Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE)
+        .find()
         .then((products) => {
+        console.log(products);
         res.render("shop/index", {
             products: products,
             pageTitle: "Shop",
@@ -48,6 +54,10 @@ export const getIndex = (req, res, next) => {
     })
         .catch((err) => {
         console.log(err);
+        const error = new Error(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
     });
 };
 export const getCart = (req, res, next) => {
@@ -147,25 +157,6 @@ export const getInvoice = (req, res, next) => {
         }
         const invoiceName = "invoice-" + orderId + ".pdf";
         const invoicePath = path.join("data", "invoices", invoiceName);
-        // fs.readFile(invoicePath, (err: any, data: any) => {
-        //   if (err) {
-        //     return next(err);
-        //   }
-        // res.contentType("application/pdf");
-        // res.setHeader(
-        //   "Content-Disposition",
-        //   "inline; filename=" + invoiceName + ""
-        // );
-        //   res.send(data);
-        // });
-        // const file = fs.createReadStream(invoicePath);
-        // res.setHeader("Content-Type", "application/pdf");
-        // res.contentType("application/pdf");
-        // res.setHeader(
-        //   "Content-Disposition",
-        //   "inline; filename=" + invoiceName + ""
-        // );
-        // file.pipe(res);
         const pdfDoc = new PDFDocument();
         pdfDoc.pipe(fs.createWriteStream(invoicePath));
         pdfDoc.pipe(res);
