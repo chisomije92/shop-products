@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Product from "../models/product.js";
 import { validationResult } from "express-validator";
 import mongoose from "mongoose";
+import { deleteFile } from "../utils/file.js";
 
 export const getAddProduct = (
   req: Request,
@@ -153,6 +154,7 @@ export const postEditProduct = (
       product!.price = updatedPrice;
       product!.description = updatedDescription;
       if (updatedImage) {
+        deleteFile(product!.imageUrl);
         product!.imageUrl = updatedImage.path;
       }
       return product!.save().then(() => {
@@ -194,11 +196,17 @@ export const postDeleteProduct = (
   next: NextFunction
 ) => {
   const prodId: string = req.body.productId;
-
-  Product.deleteOne({
-    _id: prodId,
-    userId: req.user?.id,
-  })
+  Product.findById(prodId)
+    .then((product) => {
+      if (!product) {
+        return next(new Error("Product not found"));
+      }
+      deleteFile(product!.imageUrl);
+      return product.deleteOne({
+        _id: prodId,
+        userId: req.user?.id,
+      });
+    })
     .then(() => {
       res.redirect("/admin/products");
     })

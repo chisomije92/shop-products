@@ -1,5 +1,6 @@
 import Product from "../models/product.js";
 import { validationResult } from "express-validator";
+import { deleteFile } from "../utils/file.js";
 export const getAddProduct = (req, res, next) => {
     res.render("admin/edit-product", {
         pageTitle: "Add Product",
@@ -127,6 +128,7 @@ export const postEditProduct = (req, res, next) => {
             product.price = updatedPrice;
             product.description = updatedDescription;
             if (updatedImage) {
+                deleteFile(product.imageUrl);
                 product.imageUrl = updatedImage.path;
             }
             return product.save().then(() => {
@@ -158,11 +160,18 @@ export const getProducts = (req, res, next) => {
     });
 };
 export const postDeleteProduct = (req, res, next) => {
-    var _a;
     const prodId = req.body.productId;
-    Product.deleteOne({
-        _id: prodId,
-        userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+    Product.findById(prodId)
+        .then((product) => {
+        var _a;
+        if (!product) {
+            return next(new Error("Product not found"));
+        }
+        deleteFile(product.imageUrl);
+        return product.deleteOne({
+            _id: prodId,
+            userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+        });
     })
         .then(() => {
         res.redirect("/admin/products");
