@@ -13,13 +13,35 @@ export const getProducts = (
   res: Response,
   next: NextFunction
 ) => {
+  let queryPage;
+  if (req.query && req.query.page) {
+    queryPage = +req.query.page;
+  }
+  const page: number = queryPage || 1;
+
+  let totalItems: number;
   Product.find()
-    .then((products) => {
-      res.render("shop/product-list", {
-        products: products,
-        pageTitle: "All Products",
-        path: "/products",
-      });
+    .countDocuments()
+    .then((numProducts) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE)
+        .then((products) => {
+          res.render("shop/index", {
+            products: products,
+            pageTitle: "Products",
+            path: "/products",
+            totalItems: totalItems,
+            currentPage: page,
+            hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(numProducts / ITEMS_PER_PAGE),
+            numProducts: numProducts,
+          });
+        });
     })
     .catch((err: any) => {
       const error = new Error(err);
@@ -49,21 +71,37 @@ export const getProduct = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getIndex = (req: Request, res: Response, next: NextFunction) => {
-  const page: any = req.query.page || 1;
+  let queryPage;
+  if (req.query && req.query.page) {
+    queryPage = +req.query.page;
+  }
+  const page: number = queryPage || 1;
+
+  let totalItems: number;
   Product.find()
-    .skip((page - 1) * ITEMS_PER_PAGE)
-    .limit(ITEMS_PER_PAGE)
-    .find()
-    .then((products) => {
-      console.log(products);
-      res.render("shop/index", {
-        products: products,
-        pageTitle: "Shop",
-        path: "/",
-      });
+    .countDocuments()
+    .then((numProducts) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE)
+        .then((products) => {
+          res.render("shop/index", {
+            products: products,
+            pageTitle: "Shop",
+            path: "/",
+            totalItems: totalItems,
+            currentPage: page,
+            hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+            hasPreviousPage: page > 1,
+            nextPage: page + 1,
+            previousPage: page - 1,
+            lastPage: Math.ceil(numProducts / ITEMS_PER_PAGE),
+            numProducts: numProducts,
+          });
+        });
     })
     .catch((err: any) => {
-      console.log(err);
       const error = new Error(err);
       //@ts-ignore
       error.httpStatusCode = 500;

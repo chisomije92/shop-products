@@ -105,6 +105,7 @@ mongoose
     app.listen(3000);
 })
     .catch((err) => {
+    console.log("Error connecting to MongoDB");
     console.log(err);
 });
 //# sourceMappingURL=server.js.map
