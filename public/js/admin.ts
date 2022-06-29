@@ -9,13 +9,20 @@ const deleteProduct = (el: HTMLButtonElement | HTMLInputElement) => {
     "[name=_csrf]"
   ) as HTMLInputElement;
 
-  fetch(`/product/${prodId.value}`, {
+  const productElement = el.closest("article");
+
+  fetch(`/admin/product/${prodId.value}`, {
     method: "DELETE",
     headers: {
       "csrf-token": csrf.value,
     },
   })
-    .then((result) => console.log(result))
+    .then((result) => result.json())
+    .then((data) => {
+      console.log(data);
+      // productElement?.parentNode?.removeChild(productElement);
+      productElement?.remove();
+    })
     .catch((err) => console.log(err));
 };
 
