@@ -163,6 +163,7 @@ export const getCheckout = (req, res, next) => {
             pageTitle: "Checkout",
             products: products,
             totalPrice: totalPrice,
+            userEmail: user.email,
         });
     }).catch((err) => {
         const error = new Error(err);

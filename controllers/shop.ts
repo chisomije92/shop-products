@@ -192,6 +192,7 @@ export const getCheckout = (
         pageTitle: "Checkout",
         products: products,
         totalPrice: totalPrice,
+        userEmail: user.email,
       });
     })
     .catch((err: any) => {
