@@ -19,7 +19,7 @@ export const getProducts = (req, res, next) => {
             .skip((page - 1) * ITEMS_PER_PAGE)
             .limit(ITEMS_PER_PAGE)
             .then((products) => {
-            res.render("shop/index", {
+            res.render("shop/product-list", {
                 products: products,
                 pageTitle: "Products",
                 path: "/products",

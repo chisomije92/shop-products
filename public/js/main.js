@@ -14,3 +14,9 @@ function menuToggleClickHandler() {
 
 backdrop.addEventListener("click", backdropClickHandler);
 menuToggle.addEventListener("click", menuToggleClickHandler);
+
+let deleteProduct = () => {
+  console.log(this);
+};
+
+document.querySelector(".btn").addEventListener("click", deleteProduct);
