@@ -204,7 +204,11 @@ export const getCheckout = (
     });
 };
 
-export const postOrder = (req: Request, res: Response, next: NextFunction) => {
+export const verifyOrder = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   req.user
     ?.populate("cart.items.productId")
     .then((user: any) => {

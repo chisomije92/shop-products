@@ -16,7 +16,15 @@ function payWithPaystack(evt: Event) {
     ref: "" + Math.floor(Math.random() * 1000000000 + 1),
     callback: function (response: any) {
       //this happens after the payment is completed successfully
-      const reference = response.reference;
+      fetch(`/verify-order?reference=${response.reference}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // const reference = response.reference;
       // alert("Payment complete! Reference: " + reference);
       // Make an AJAX call to your server with the reference to verify the transaction
     },

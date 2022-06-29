@@ -173,7 +173,7 @@ export const getCheckout = (req, res, next) => {
         return next(error);
     });
 };
-export const postOrder = (req, res, next) => {
+export const verifyOrder = (req, res, next) => {
     var _a;
     (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((user) => {
         var _a, _b;
