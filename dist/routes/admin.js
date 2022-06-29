@@ -1,5 +1,5 @@
 import express from "express";
-import { getAddProduct, getEditProduct, getProducts, postAddProduct, postDeleteProduct, postEditProduct, } from "../controllers/admin.js";
+import { getAddProduct, getEditProduct, getProducts, postAddProduct, deleteProduct, postEditProduct, } from "../controllers/admin.js";
 import isAuth from "../middleware/is-auth.js";
 import { body } from "express-validator";
 const router = express.Router();
@@ -22,6 +22,6 @@ router.post("/edit-product", [
     body("price", "Set a valid price value").isFloat(),
     body("description", "Set a valid desc value").isLength({ min: 5 }).trim(),
 ], isAuth, postEditProduct);
-router.post("/delete-product", isAuth, postDeleteProduct);
+router.delete("/product/:productId", isAuth, deleteProduct);
 export default router;
 //# sourceMappingURL=admin.js.map

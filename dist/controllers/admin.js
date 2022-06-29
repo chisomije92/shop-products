@@ -159,8 +159,8 @@ export const getProducts = (req, res, next) => {
         return next(error);
     });
 };
-export const postDeleteProduct = (req, res, next) => {
-    const prodId = req.body.productId;
+export const deleteProduct = (req, res, next) => {
+    const prodId = req.params.productId;
     Product.findById(prodId)
         .then((product) => {
         var _a;
@@ -174,13 +174,14 @@ export const postDeleteProduct = (req, res, next) => {
         });
     })
         .then(() => {
-        res.redirect("/admin/products");
+        res.status(200).json({
+            message: "Success!",
+        });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        res.status(500).json({
+            message: "Deleting product failed",
+        });
     });
 };
 //# sourceMappingURL=admin.js.map

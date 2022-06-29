@@ -1,8 +1,16 @@
 const buttons = document.querySelectorAll("button");
 const deleteProduct = (el) => {
-    var _a;
-    const input = (_a = el.parentElement) === null || _a === void 0 ? void 0 : _a.querySelector("[name=productId]");
-    console.log(input.value);
+    var _a, _b;
+    const prodId = (_a = el.parentElement) === null || _a === void 0 ? void 0 : _a.querySelector("[name=productId]");
+    const csrf = (_b = el.parentElement) === null || _b === void 0 ? void 0 : _b.querySelector("[name=_csrf]");
+    fetch(`/product/${prodId.value}`, {
+        method: "DELETE",
+        headers: {
+            "csrf-token": csrf.value,
+        },
+    })
+        .then((result) => console.log(result))
+        .catch((err) => console.log(err));
 };
 let btnEl;
 for (let btn of buttons) {
@@ -10,5 +18,4 @@ for (let btn of buttons) {
     btn.addEventListener("click", deleteProduct.bind(null, btnEl));
 }
 export {};
-// document.getElementById("btn-sel")!.addEventListener("click", deleteProduct);
 //# sourceMappingURL=admin.js.map

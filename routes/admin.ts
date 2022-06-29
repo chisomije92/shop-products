@@ -4,7 +4,7 @@ import {
   getEditProduct,
   getProducts,
   postAddProduct,
-  postDeleteProduct,
+  deleteProduct,
   postEditProduct,
 } from "../controllers/admin.js";
 import isAuth from "../middleware/is-auth.js";
@@ -42,5 +42,5 @@ router.post(
   isAuth,
   postEditProduct
 );
-router.post("/delete-product", isAuth, postDeleteProduct);
+router.delete("/product/:productId", isAuth, deleteProduct);
 export default router;

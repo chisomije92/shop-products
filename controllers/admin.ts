@@ -190,12 +190,12 @@ export const getProducts = (
     });
 };
 
-export const postDeleteProduct = (
+export const deleteProduct = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const prodId: string = req.body.productId;
+  const prodId: string = req.params.productId;
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
@@ -208,12 +208,13 @@ export const postDeleteProduct = (
       });
     })
     .then(() => {
-      res.redirect("/admin/products");
+      res.status(200).json({
+        message: "Success!",
+      });
     })
     .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+      res.status(500).json({
+        message: "Deleting product failed",
+      });
     });
 };
