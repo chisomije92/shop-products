@@ -173,6 +173,36 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
+export const getCheckout = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.user
+    ?.populate("cart.items.productId")
+    .then((user: UserType) => {
+      const products = user.cart.items;
+
+      let totalPrice = 0;
+      products.forEach((product: any) => {
+        totalPrice += product.quantity * product.productId.price;
+      });
+      res.render("shop/checkout", {
+        path: "/checkout",
+        pageTitle: "Checkout",
+        products: products,
+        totalPrice: totalPrice,
+      });
+    })
+    .catch((err: any) => {
+      const error = new Error(err);
+      console.log(err);
+      //@ts-ignore
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
 export const postOrder = (req: Request, res: Response, next: NextFunction) => {
   req.user
     ?.populate("cart.items.productId")

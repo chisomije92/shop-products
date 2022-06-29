@@ -150,6 +150,28 @@ export const getOrders = (req, res, next) => {
         return next(error);
     });
 };
+export const getCheckout = (req, res, next) => {
+    var _a;
+    (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((user) => {
+        const products = user.cart.items;
+        let totalPrice = 0;
+        products.forEach((product) => {
+            totalPrice += product.quantity * product.productId.price;
+        });
+        res.render("shop/checkout", {
+            path: "/checkout",
+            pageTitle: "Checkout",
+            products: products,
+            totalPrice: totalPrice,
+        });
+    }).catch((err) => {
+        const error = new Error(err);
+        console.log(err);
+        //@ts-ignore
+        error.httpStatusCode = 500;
+        return next(error);
+    });
+};
 export const postOrder = (req, res, next) => {
     var _a;
     (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((user) => {
