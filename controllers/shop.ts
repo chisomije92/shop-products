@@ -3,8 +3,12 @@ import path from "path";
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import Product, { ProductType } from "../models/product.js";
-import User, { UserType } from "../models/user.js";
+import { UserType } from "../models/user.js";
 import Order from "../models/order.js";
+import fetch from "node-fetch";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const ITEMS_PER_PAGE = 2;
 
@@ -209,6 +213,8 @@ export const verifyOrder = (
   res: Response,
   next: NextFunction
 ) => {
+  const reference = req.query.reference;
+
   req.user
     ?.populate("cart.items.productId")
     .then((user: any) => {
@@ -231,7 +237,18 @@ export const verifyOrder = (
       req.user?.clearCart();
     })
     .then(() => {
-      res.redirect("/orders");
+      return fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+        method: "GET",
+        headers: {
+          authorization: `bearer ${process.env.PAYSTACK_KEY}`,
+        },
+      });
+    })
+    .then((response: any) => {
+      return response.json();
+    })
+    .then((data: any) => {
+      res.status(200).json(data);
     })
     .catch((err: any) => {
       const error = new Error(err);
