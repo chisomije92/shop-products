@@ -3,10 +3,6 @@ import { getAddProduct, getEditProduct, getProducts, postAddProduct, deleteProdu
 import isAuth from "../middleware/is-auth.js";
 import { body } from "express-validator";
 const router = express.Router();
-router.param("productId", (req, res, next, productId) => {
-    console.log(productId);
-    next();
-});
 router.get("/add-product", isAuth, getAddProduct);
 router.get("/products", isAuth, getProducts);
 router.post("/add-product", [
