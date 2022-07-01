@@ -14,7 +14,7 @@
                     <% }) %>
                 </ul>  
                 <div class="centered">
-                    <h2>Total: <%= totalPrice  %> </h2>
+                    <h2>Total: ₦<%= totalPrice  %> </h2>
                 </div>
 <div class="centered">
 <form id="paymentForm">
@@ -23,7 +23,7 @@
 <input type="email" id="email-address" value="<%= userEmail %>" hidden />
 </div>
 <div class="form-group">
-<input type="tel" id="amount" value="₦<%= totalPrice %>" hidden />
+<input type="tel" id="amount" value="<%= totalPrice %>" hidden />
 </div>
 <div class="form-submit">
 <button class="btn" type="submit" > Pay </button>

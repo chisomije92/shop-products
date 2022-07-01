@@ -6,9 +6,6 @@ import Product, { ProductType } from "../models/product.js";
 import { UserType } from "../models/user.js";
 import Order from "../models/order.js";
 import fetch from "node-fetch";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const ITEMS_PER_PAGE = 2;
 

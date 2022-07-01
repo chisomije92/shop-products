@@ -4,8 +4,6 @@ import fs from "fs";
 import Product from "../models/product.js";
 import Order from "../models/order.js";
 import fetch from "node-fetch";
-import dotenv from "dotenv";
-dotenv.config();
 const ITEMS_PER_PAGE = 2;
 export const getProducts = (req, res, next) => {
     let queryPage;

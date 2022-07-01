@@ -1,13 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import user from "../models/user.js";
 import { validationResult } from "express-validator";
-
-dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
