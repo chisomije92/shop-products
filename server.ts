@@ -16,6 +16,8 @@ import flash from "connect-flash";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { get500Page } from "./controllers/500.js";
+import helmet from "helmet";
+import compression from "compression";
 
 const MongoStore = MongoDBStore(sessions);
 
@@ -63,6 +65,9 @@ const fileFilter = (
 };
 app.set("view engine", "ejs");
 app.set("views", "views");
+
+// app.use(helmet());
+app.use(compression());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -126,7 +131,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 mongoose
   .connect(conn_string)
   .then(() => {
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch((err) => {
     console.log("Error connecting to MongoDB");
