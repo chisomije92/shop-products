@@ -18,6 +18,8 @@ import { v4 as uuidv4 } from "uuid";
 import { get500Page } from "./controllers/500.js";
 import helmet from "helmet";
 import compression from "compression";
+import morgan from "morgan";
+import fs from "fs";
 
 const MongoStore = MongoDBStore(sessions);
 
@@ -63,11 +65,18 @@ const fileFilter = (
     cb(null, false);
   }
 };
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 // app.use(helmet());
 app.use(compression());
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
