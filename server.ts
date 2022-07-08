@@ -66,17 +66,17 @@ const fileFilter = (
   }
 };
 
-const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, "access.log"),
-  { flags: "a" }
-);
+// const accessLogStream = fs.createWriteStream(
+//   path.join(__dirname, "access.log"),
+//   { flags: "a" }
+// );
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 // app.use(helmet());
 app.use(compression());
-app.use(morgan("combined", { stream: accessLogStream }));
+// app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 

@@ -16,8 +16,6 @@ import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { get500Page } from "./controllers/500.js";
 import compression from "compression";
-import morgan from "morgan";
-import fs from "fs";
 const MongoStore = MongoDBStore(sessions);
 dotenv.config();
 let conn_string;
@@ -52,12 +50,15 @@ const fileFilter = (req, file, cb) => {
         cb(null, false);
     }
 };
-const accessLogStream = fs.createWriteStream(path.join(__dirname, "access.log"), { flags: "a" });
+// const accessLogStream = fs.createWriteStream(
+//   path.join(__dirname, "access.log"),
+//   { flags: "a" }
+// );
 app.set("view engine", "ejs");
 app.set("views", "views");
 // app.use(helmet());
 app.use(compression());
-app.use(morgan("combined", { stream: accessLogStream }));
+// app.use(morgan("combined", { stream: accessLogStream }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
