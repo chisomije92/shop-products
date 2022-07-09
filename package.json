@@ -8,7 +8,8 @@
     "start": " node dist/server.js"
   },
   "engines": {
-    "node": "18.2.0"
+    "node": "16.x",
+    "npm": "8.12.2"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
