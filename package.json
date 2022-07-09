@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "start": " nodemon dist/server.js"
+    "start": " node dist/server.js"
   },
   "engines": {
     "node": "18.2.0"
@@ -35,14 +35,14 @@
     "@types/node": "^17.0.42",
     "@types/pug": "^2.0.6",
     "i": "^0.3.7",
-    "mongoose": "^6.3.8",
-    "nodemon": "^2.0.16",
-    "npm": "^8.12.1",
     "sequelize-typescript": "^2.1.3",
     "ts-node": "^10.8.0",
     "typescript": "^4.8.0-dev.20220620"
   },
   "dependencies": {
+    "mongoose": "^6.3.8",
+    "nodemon": "^2.0.16",
+    "npm": "^8.12.1",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
