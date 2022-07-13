@@ -16,10 +16,7 @@ import flash from "connect-flash";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { get500Page } from "./controllers/500.js";
-import helmet from "helmet";
 import compression from "compression";
-import morgan from "morgan";
-import fs from "fs";
 
 const MongoStore = MongoDBStore(sessions);
 
@@ -66,14 +63,10 @@ const fileFilter = (
   }
 };
 
-
-
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-
 app.use(compression());
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
