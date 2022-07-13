@@ -4,6 +4,7 @@ import fs from "fs";
 import Product from "../models/product.js";
 import Order from "../models/order.js";
 import fetch from "node-fetch";
+import { CustomError } from "../utils/custom-err.js";
 const ITEMS_PER_PAGE = 2;
 export const getProducts = (req, res, next) => {
     let queryPage;
@@ -36,10 +37,7 @@ export const getProducts = (req, res, next) => {
         });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const getProduct = (req, res, next) => {
@@ -54,10 +52,7 @@ export const getProduct = (req, res, next) => {
         });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const getIndex = (req, res, next) => {
@@ -91,15 +86,11 @@ export const getIndex = (req, res, next) => {
         });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const getCart = (req, res, next) => {
     var _a;
-    // User.findById(req.session.user?._id)
     (_a = req.user) === null || _a === void 0 ? void 0 : _a.populate("cart.items.productId").then((user) => {
         const products = user.cart.items;
         res.render("shop/cart", {
@@ -107,7 +98,7 @@ export const getCart = (req, res, next) => {
             pageTitle: "Your Cart",
             products: products,
         });
-    }).catch((err) => console.log(err));
+    }).catch((err) => next(new CustomError(err.message, 500)));
 };
 export const postCart = (req, res, next) => {
     const prodId = req.body.productId;
@@ -127,10 +118,7 @@ export const deleteCartProduct = (req, res, next) => {
         res.redirect("/cart");
     }).catch((err) => {
         {
-            const error = new Error(err);
-            //@ts-ignore
-            error.httpStatusCode = 500;
-            return next(error);
+            return next(new CustomError(err.message, 500));
         }
     });
 };
@@ -145,10 +133,7 @@ export const getOrders = (req, res, next) => {
         });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const getCheckout = (req, res, next) => {
@@ -167,11 +152,7 @@ export const getCheckout = (req, res, next) => {
             userEmail: user.email,
         });
     }).catch((err) => {
-        const error = new Error(err);
-        console.log(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const verifyOrder = (req, res, next) => {
@@ -208,10 +189,7 @@ export const verifyOrder = (req, res, next) => {
     }).then((data) => {
         res.status(200).json(data);
     }).catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const getInvoice = (req, res, next) => {
@@ -248,7 +226,7 @@ export const getInvoice = (req, res, next) => {
         pdfDoc.end();
     })
         .catch((err) => {
-        return next(err);
+        return next(new CustomError(err.message, 500));
     });
 };
 //# sourceMappingURL=shop.js.map

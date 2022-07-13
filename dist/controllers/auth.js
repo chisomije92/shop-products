@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import user from "../models/user.js";
 import { validationResult } from "express-validator";
+import { CustomError } from "../utils/custom-err.js";
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -104,10 +105,7 @@ export const postLogin = (req, res, next) => {
         });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const postLogout = (req, res, next) => {
@@ -153,16 +151,13 @@ export const postSignup = (req, res, next) => {
                     html: "<h1>You successfully signed up!</h1>",
                 })
                     .catch((err) => {
-                    console.log(err);
+                    return next(new CustomError(err.message, 500));
                 });
             });
         });
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 export const getReset = (req, res, next) => {
@@ -212,10 +207,7 @@ export const postReset = (req, res, next) => {
             });
         })
             .catch((err) => {
-            const error = new Error(err);
-            //@ts-ignore
-            error.httpStatusCode = 500;
-            return next(error);
+            return next(new CustomError(err.message, 500));
         });
     });
 };
@@ -265,10 +257,7 @@ export const postNewPassword = (req, res, next) => {
         res.redirect("/login");
     })
         .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
     });
 };
 //# sourceMappingURL=auth.js.map

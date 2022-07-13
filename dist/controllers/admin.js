@@ -1,6 +1,16 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import Product from "../models/product.js";
 import { validationResult } from "express-validator";
 import { deleteFile } from "../utils/file.js";
+import { CustomError } from "../utils/custom-err.js";
 export const getAddProduct = (req, res, next) => {
     res.render("admin/edit-product", {
         pageTitle: "Add Product",
@@ -11,7 +21,7 @@ export const getAddProduct = (req, res, next) => {
         validationErrors: [],
     });
 };
-export const postAddProduct = (req, res, next) => {
+export const postAddProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const title = req.body.title;
     const image = req.file;
     const price = req.body.price;
@@ -44,38 +54,33 @@ export const postAddProduct = (req, res, next) => {
                 price: price,
                 description: description,
             },
-            // csrfToken: req.csrfToken(),
             errorMessage: errors.array()[0].msg,
             validationErrors: errors.array(),
         });
     }
-    const product = new Product({
-        title: title,
-        price: price,
-        description: description,
-        imageUrl: imageUrl,
-        userId: req.user,
-    });
-    product
-        .save()
-        .then(() => {
+    try {
+        const product = new Product({
+            title: title,
+            price: price,
+            description: description,
+            imageUrl: imageUrl,
+            userId: req.user,
+        });
+        yield product.save();
         res.redirect("/admin/products");
-    })
-        .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
-    });
-};
-export const getEditProduct = (req, res, next) => {
+    }
+    catch (err) {
+        next(new CustomError(err.message));
+    }
+});
+export const getEditProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const editMode = req.query.edit;
     if (!editMode) {
         return res.redirect("/");
     }
     const prodId = req.params.productId;
-    Product.findById(prodId)
-        .then((product) => {
+    try {
+        const product = yield Product.findById(prodId);
         if (!product) {
             return res.redirect("/");
         }
@@ -88,15 +93,13 @@ export const getEditProduct = (req, res, next) => {
             product: product,
             validationErrors: [],
         });
-    })
-        .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
-    });
-};
-export const postEditProduct = (req, res, next) => {
+    }
+    catch (err) {
+        next(new CustomError(err.message, 500));
+    }
+});
+export const postEditProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const prodId = req.body.productId;
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
@@ -118,70 +121,61 @@ export const postEditProduct = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    Product.findById(prodId).then((product) => {
-        var _a;
-        if ((product === null || product === void 0 ? void 0 : product.userId.toString()) !== ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id.toString())) {
-            return res.redirect("/");
+    const product = yield Product.findById(prodId);
+    if ((product === null || product === void 0 ? void 0 : product.userId.toString()) !== ((_a = req.user) === null || _a === void 0 ? void 0 : _a.id.toString())) {
+        return res.redirect("/");
+    }
+    else {
+        product.title = updatedTitle;
+        product.price = updatedPrice;
+        product.description = updatedDescription;
+        if (updatedImage) {
+            deleteFile(product.imageUrl);
+            product.imageUrl = updatedImage.path;
         }
-        else {
-            product.title = updatedTitle;
-            product.price = updatedPrice;
-            product.description = updatedDescription;
-            if (updatedImage) {
-                deleteFile(product.imageUrl);
-                product.imageUrl = updatedImage.path;
-            }
-            return product.save().then(() => {
-                res.redirect("/admin/products");
-            });
-        }
-    });
-};
-export const getProducts = (req, res, next) => {
-    var _a;
-    Product.find({
-        userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
-    })
-        // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
-        // .populate("userId") // this is to populate the userId field with the user details
-        .then((products) => {
+        return product.save().then(() => {
+            res.redirect("/admin/products");
+        });
+    }
+});
+export const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    try {
+        const products = yield Product.find({
+            userId: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id,
+        });
         res.render("admin/products", {
             products: products,
             pageTitle: "Admin Products",
             path: "/admin/products",
             isAuthenticated: req.session.isLoggedIn,
         });
-    })
-        .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
-    });
-};
-export const deleteProduct = (req, res, next) => {
+    }
+    catch (err) {
+        next(new CustomError(err.message, 500));
+    }
+});
+export const deleteProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
     const prodId = req.params.productId;
-    Product.findById(prodId)
-        .then((product) => {
-        var _a;
+    try {
+        const product = yield Product.findById(prodId);
         if (!product) {
             return next(new Error("Product not found"));
         }
         deleteFile(product.imageUrl);
-        return product.deleteOne({
+        yield product.deleteOne({
             _id: prodId,
-            userId: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id,
+            userId: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id,
         });
-    })
-        .then(() => {
         res.status(200).json({
             message: "Success!",
         });
-    })
-        .catch((err) => {
+    }
+    catch (err) {
         res.status(500).json({
             message: "Deleting product failed",
         });
-    });
-};
+    }
+});
 //# sourceMappingURL=admin.js.map

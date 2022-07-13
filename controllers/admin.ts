@@ -19,7 +19,7 @@ export const getAddProduct = (
   });
 };
 
-export const postAddProduct = (
+export const postAddProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -63,25 +63,24 @@ export const postAddProduct = (
       validationErrors: errors.array(),
     });
   }
-  const product = new Product({
-    title: title,
-    price: price,
-    description: description,
-    imageUrl: imageUrl,
-    userId: req.user,
-  });
 
-  product
-    .save()
-    .then(() => {
-      res.redirect("/admin/products");
-    })
-    .catch((err: Error) => {
-      return next(new CustomError(err.message, 500));
+  try {
+    const product = new Product({
+      title: title,
+      price: price,
+      description: description,
+      imageUrl: imageUrl,
+      userId: req.user,
     });
+
+    await product.save();
+    res.redirect("/admin/products");
+  } catch (err: any) {
+    next(new CustomError(err.message));
+  }
 };
 
-export const getEditProduct = (
+export const getEditProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -91,27 +90,28 @@ export const getEditProduct = (
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then((product) => {
-      if (!product) {
-        return res.redirect("/");
-      }
-      res.render("admin/edit-product", {
-        pageTitle: "Edit Product",
-        path: "/admin/edit-product",
-        editing: editMode,
-        hasError: false,
-        errorMessage: null,
-        product: product,
-        validationErrors: [],
-      });
-    })
-    .catch((err: Error) => {
-      return next(new CustomError(err.message, 500));
+  try {
+    const product = await Product.findById(prodId);
+
+    if (!product) {
+      return res.redirect("/");
+    }
+
+    res.render("admin/edit-product", {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing: editMode,
+      hasError: false,
+      errorMessage: null,
+      product: product,
+      validationErrors: [],
     });
+  } catch (err: any) {
+    next(new CustomError(err.message, 500));
+  }
 };
 
-export const postEditProduct = (
+export const postEditProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -139,70 +139,70 @@ export const postEditProduct = (
     });
   }
 
-  Product.findById(prodId).then((product) => {
-    if (product?.userId.toString() !== req.user?.id.toString()) {
-      return res.redirect("/");
-    } else {
-      product!.title = updatedTitle;
-      product!.price = updatedPrice;
-      product!.description = updatedDescription;
-      if (updatedImage) {
-        deleteFile(product!.imageUrl);
-        product!.imageUrl = updatedImage.path;
-      }
-      return product!.save().then(() => {
-        res.redirect("/admin/products");
-      });
+  const product = await Product.findById(prodId);
+
+  if (product?.userId.toString() !== req.user?.id.toString()) {
+    return res.redirect("/");
+  } else {
+    product!.title = updatedTitle;
+    product!.price = updatedPrice;
+    product!.description = updatedDescription;
+    if (updatedImage) {
+      deleteFile(product!.imageUrl);
+      product!.imageUrl = updatedImage.path;
     }
-  });
+    return product!.save().then(() => {
+      res.redirect("/admin/products");
+    });
+  }
 };
 
-export const getProducts = (
+export const getProducts = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  Product.find({
-    userId: req.user?.id,
-  })
-    .then((products) => {
-      res.render("admin/products", {
-        products: products,
-        pageTitle: "Admin Products",
-        path: "/admin/products",
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err: Error) => {
-      return next(new CustomError(err.message, 500));
+  try {
+    const products = await Product.find({
+      userId: req.user?.id,
     });
+
+    res.render("admin/products", {
+      products: products,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  } catch (err: any) {
+    next(new CustomError(err.message, 500));
+  }
 };
 
-export const deleteProduct = (
+export const deleteProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const prodId: string = req.params.productId;
-  Product.findById(prodId)
-    .then((product) => {
-      if (!product) {
-        return next(new Error("Product not found"));
-      }
-      deleteFile(product!.imageUrl);
-      return product.deleteOne({
-        _id: prodId,
-        userId: req.user?.id,
-      });
-    })
-    .then(() => {
-      res.status(200).json({
-        message: "Success!",
-      });
-    })
-    .catch((err: any) => {
-      res.status(500).json({
-        message: "Deleting product failed",
-      });
+  try {
+    const product = await Product.findById(prodId);
+
+    if (!product) {
+      return next(new Error("Product not found"));
+    }
+
+    deleteFile(product.imageUrl);
+    await product.deleteOne({
+      _id: prodId,
+      userId: req.user?.id,
     });
+
+    res.status(200).json({
+      message: "Success!",
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      message: "Deleting product failed",
+    });
+  }
 };
