@@ -111,7 +111,6 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const getCart = (req: Request, res: Response, next: NextFunction) => {
-  // User.findById(req.session.user?._id)
   req.user
     ?.populate("cart.items.productId")
     .then((user: UserType) => {
