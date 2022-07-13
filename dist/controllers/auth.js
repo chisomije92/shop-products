@@ -1,10 +1,20 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-import user from "../models/user.js";
 import { validationResult } from "express-validator";
 import { CustomError } from "../utils/custom-err.js";
+import dotenv from "dotenv";
+dotenv.config();
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -53,7 +63,7 @@ export const getSignup = (req, res, next) => {
         validationErrors: [],
     });
 };
-export const postLogin = (req, res, next) => {
+export const postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -68,8 +78,8 @@ export const postLogin = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    User.findOne({ email: email })
-        .then((user) => {
+    try {
+        const user = yield User.findOne({ email: email });
         if (!user) {
             return res.status(422).render("auth/login", {
                 pageTitle: "Login",
@@ -82,38 +92,35 @@ export const postLogin = (req, res, next) => {
                 validationErrors: [],
             });
         }
-        bcrypt.compare(password, user.password, (err, result) => {
-            if (result) {
-                req.session.isLoggedIn = true;
-                req.session.user = user;
-                req.session.save(() => {
-                    return res.redirect("/");
-                });
-            }
-            else {
-                return res.status(422).render("auth/login", {
-                    pageTitle: "Login",
-                    path: "/login",
-                    errorMessage: "Invalid email or password",
-                    oldInput: {
-                        email: email,
-                        password: password,
-                    },
-                    validationErrors: [],
-                });
-            }
+        const isEqual = yield bcrypt.compare(password, user.password);
+        if (!isEqual) {
+            return res.status(422).render("auth/login", {
+                pageTitle: "Login",
+                path: "/login",
+                errorMessage: "Invalid email or password!",
+                oldInput: {
+                    email: email,
+                    password: password,
+                },
+                validationErrors: [],
+            });
+        }
+        req.session.isLoggedIn = true;
+        req.session.user = user;
+        req.session.save(() => {
+            return res.redirect("/");
         });
-    })
-        .catch((err) => {
-        return next(new CustomError(err.message, 500));
-    });
-};
+    }
+    catch (err) {
+        next(new CustomError(err.message, 500));
+    }
+});
 export const postLogout = (req, res, next) => {
     req.session.destroy(() => {
         res.redirect("/");
     });
 };
-export const postSignup = (req, res, next) => {
+export const postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password, confirmPassword } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -129,37 +136,31 @@ export const postSignup = (req, res, next) => {
             validationErrors: errors.array(),
         });
     }
-    User.findOne({ email: email })
-        .then((userDoc) => {
+    try {
+        const userDoc = yield User.findOne({ email: email });
         if (userDoc) {
             req.flash("error", "User already exists. Use another email.");
             return res.redirect("/signup");
         }
-        return bcrypt.hash(password, 12).then((hashedPassword) => {
-            const user = new User({
-                email: email,
-                password: hashedPassword,
-                cart: { items: [] },
-            });
-            return user.save().then((result) => {
-                res.redirect("/login");
-                return transporter
-                    .sendMail({
-                    from: "chisomije92@gmail.com",
-                    to: email,
-                    subject: "Signup succeeded",
-                    html: "<h1>You successfully signed up!</h1>",
-                })
-                    .catch((err) => {
-                    return next(new CustomError(err.message, 500));
-                });
-            });
+        const hashedPassword = yield bcrypt.hash(password, 12);
+        const user = new User({
+            email: email,
+            password: hashedPassword,
+            cart: { items: [] },
         });
-    })
-        .catch((err) => {
+        yield user.save();
+        res.redirect("/login");
+        yield transporter.sendMail({
+            from: "chisomije92@gmail.com",
+            to: email,
+            subject: "Signup succeeded",
+            html: "<h1>You successfully signed up!</h1>",
+        });
+    }
+    catch (err) {
         return next(new CustomError(err.message, 500));
-    });
-};
+    }
+});
 export const getReset = (req, res, next) => {
     let message = req.flash("error");
     if (message.length > 0) {
@@ -175,89 +176,87 @@ export const getReset = (req, res, next) => {
     });
 };
 export const postReset = (req, res, next) => {
-    crypto.randomBytes(32, (err, buffer) => {
+    crypto.randomBytes(32, (err, buffer) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
             console.log(err);
             return res.redirect("/reset");
         }
         const token = buffer.toString("hex");
-        User.findOne({
-            email: req.body.email,
-        })
-            .then((user) => {
+        try {
+            const user = yield User.findOne({
+                email: req.body.email,
+            });
             if (!user) {
                 req.flash("error", "Email not found!");
                 return res.redirect("/reset");
             }
             user.resetToken = token;
             user.resetTokenExpiration = Date.now() + 3600000;
-            user.save();
-            return user;
-        })
-            .then((result) => {
-            res.redirect("/");
-            return transporter.sendMail({
-                from: "chisomije92@gmail.com",
-                to: req.body.email,
-                subject: "Password Reset",
-                html: `
+            user.save().then(() => {
+                res.redirect("/");
+                return transporter
+                    .sendMail({
+                    from: "chisomije92@gmail.com",
+                    to: req.body.email,
+                    subject: "Password Reset",
+                    html: `
             <p>You requested a password reset</p>
-            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>  
+            <p>Click this <a href="https://shop-products2.herokuapp.com/reset/${token}">link</a> to set a new password</p>  
           `,
+                })
+                    .catch((err) => {
+                    console.log(err);
+                });
             });
-        })
-            .catch((err) => {
-            return next(new CustomError(err.message, 500));
-        });
-    });
+        }
+        catch (err) {
+            next(new CustomError(err.message, 500));
+        }
+    }));
 };
-export const getNewPassword = (req, res, next) => {
+export const getNewPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.params.token;
-    User.findOne({
+    const user = yield User.findOne({
         resetToken: token,
         resetTokenExpiration: { $gt: Date.now() },
-    }).then((user) => {
-        let message = req.flash("error");
-        if (message.length > 0) {
-            message = message[0];
-        }
-        else {
-            message = null;
-        }
-        res.render("auth/new-password", {
-            pageTitle: "New Password",
-            path: "/new-password",
-            errorMessage: message,
-            userId: user === null || user === void 0 ? void 0 : user._id.toString(),
-            passwordToken: token,
+    });
+    let message = req.flash("error");
+    if (message.length > 0) {
+        message = message[0];
+    }
+    else {
+        message = null;
+    }
+    res.render("auth/new-password", {
+        pageTitle: "New Password",
+        path: "/new-password",
+        errorMessage: message,
+        userId: user === null || user === void 0 ? void 0 : user._id.toString(),
+        passwordToken: token,
+    });
+});
+export const postNewPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const newPassword = req.body.password;
+        const { userId, passwordToken } = req.body;
+        const user = yield User.findOne({
+            resetToken: passwordToken,
+            resetTokenExpiration: { $gt: Date.now() },
+            _id: userId,
         });
-    });
-};
-export const postNewPassword = (req, res, next) => {
-    let resetUser;
-    const newPassword = req.body.password;
-    const { userId, passwordToken } = req.body;
-    user
-        .findOne({
-        resetToken: passwordToken,
-        resetTokenExpiration: { $gt: Date.now() },
-        _id: userId,
-    })
-        .then((user) => {
-        resetUser = user;
-        return bcrypt.hash(newPassword, 12);
-    })
-        .then((hashedPassword) => {
-        resetUser.password = hashedPassword;
-        resetUser.resetToken = undefined;
-        resetUser.resetTokenExpiration = undefined;
-        return resetUser.save();
-    })
-        .then((result) => {
+        yield bcrypt.hash(newPassword, 12);
+        if (!user) {
+            req.flash("error", "Invalid token");
+            return res.redirect("/reset");
+        }
+        user.password = newPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
+        yield user.save();
         res.redirect("/login");
-    })
-        .catch((err) => {
-        return next(new CustomError(err.message, 500));
-    });
-};
+    }
+    catch (err) {
+        next(new CustomError(err.message, 500));
+    }
+});
 //# sourceMappingURL=auth.js.map
