@@ -133,9 +133,8 @@ export const postEditProduct = (req, res, next) => __awaiter(void 0, void 0, voi
             deleteFile(product.imageUrl);
             product.imageUrl = updatedImage.path;
         }
-        return product.save().then(() => {
-            res.redirect("/admin/products");
-        });
+        yield product.save();
+        res.redirect("/admin/products");
     }
 });
 export const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

@@ -151,9 +151,8 @@ export const postEditProduct = async (
       deleteFile(product!.imageUrl);
       product!.imageUrl = updatedImage.path;
     }
-    return product!.save().then(() => {
-      res.redirect("/admin/products");
-    });
+    await product!.save();
+    res.redirect("/admin/products");
   }
 };
 
