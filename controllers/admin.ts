@@ -171,8 +171,6 @@ export const getProducts = (
   Product.find({
     userId: req.user?.id,
   })
-    // .select("title price -_id") // this is to select data to be returned. N.B. -_id is to exclude the id from the data
-    // .populate("userId") // this is to populate the userId field with the user details
     .then((products) => {
       res.render("admin/products", {
         products: products,
