@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import user from "../models/user.js";
 import { validationResult } from "express-validator";
+import { CustomError } from "../utils/custom-err.js";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -106,11 +107,8 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
         }
       });
     })
-    .catch((err) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -158,17 +156,14 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
               subject: "Signup succeeded",
               html: "<h1>You successfully signed up!</h1>",
             })
-            .catch((err) => {
-              console.log(err);
+            .catch((err: Error) => {
+              return next(new CustomError(err.message, 500));
             });
         });
       });
     })
-    .catch((err) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -218,11 +213,8 @@ export const postReset = (req: Request, res: Response, next: NextFunction) => {
           `,
         });
       })
-      .catch((err) => {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+      .catch((err: Error) => {
+        return next(new CustomError(err.message, 500));
       });
   });
 };
@@ -280,10 +272,7 @@ export const postNewPassword = (
     .then((result) => {
       res.redirect("/login");
     })
-    .catch((err) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };

@@ -17,6 +17,7 @@ import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import { get500Page } from "./controllers/500.js";
 import compression from "compression";
+import { CustomError } from "./utils/custom-err.js";
 
 const MongoStore = MongoDBStore(sessions);
 
@@ -108,8 +109,8 @@ app.use((req, res, next) => {
       req.user = user;
       next();
     })
-    .catch((err) => {
-      next(new Error(err));
+    .catch((err: Error) => {
+      next(next(new CustomError(err.message, 500)));
     });
 });
 
@@ -119,13 +120,15 @@ app.use(authRoute);
 app.get("/500", get500Page);
 app.use(get404Page);
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).render("500", {
-    pageTitle: "Error",
-    path: "/500",
-    isAuthenticated: req.session.isLoggedIn,
-  });
-});
+app.use(
+  (error: CustomError, req: Request, res: Response, next: NextFunction) => {
+    res.status(500).render("500", {
+      pageTitle: "Error",
+      path: "/500",
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  }
+);
 
 mongoose
   .connect(conn_string)

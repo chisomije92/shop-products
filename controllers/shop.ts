@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import path from "path";
 import PDFDocument from "pdfkit";
 import fs from "fs";
-import Product, { ProductType } from "../models/product.js";
+import Product from "../models/product.js";
 import { UserType } from "../models/user.js";
 import Order from "../models/order.js";
 import fetch from "node-fetch";
+import { CustomError } from "../utils/custom-err.js";
 
 const ITEMS_PER_PAGE = 2;
 
@@ -44,11 +45,8 @@ export const getProducts = (
           });
         });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -63,11 +61,8 @@ export const getProduct = (req: Request, res: Response, next: NextFunction) => {
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -102,11 +97,8 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
           });
         });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -121,7 +113,7 @@ export const getCart = (req: Request, res: Response, next: NextFunction) => {
         products: products,
       });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: Error) => next(new CustomError(err.message, 500)));
 };
 
 export const postCart = (req: Request, res: Response, next: NextFunction) => {
@@ -146,12 +138,9 @@ export const deleteCartProduct = (
     .then(() => {
       res.redirect("/cart");
     })
-    .catch((err: any) => {
+    .catch((err: Error) => {
       {
-        const error = new Error(err);
-        //@ts-ignore
-        error.httpStatusCode = 500;
-        return next(error);
+        return next(new CustomError(err.message, 500));
       }
     });
 };
@@ -165,11 +154,8 @@ export const getOrders = (req: Request, res: Response, next: NextFunction) => {
         path: "/orders",
       });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -195,12 +181,8 @@ export const getCheckout = (
         userEmail: user.email,
       });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      console.log(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -246,11 +228,8 @@ export const verifyOrder = (
     .then((data: any) => {
       res.status(200).json(data);
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -289,7 +268,7 @@ export const getInvoice = (req: Request, res: Response, next: NextFunction) => {
       pdfDoc.fontSize(20).text("Total Price: $" + totalPrice);
       pdfDoc.end();
     })
-    .catch((err: any) => {
-      return next(err);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };

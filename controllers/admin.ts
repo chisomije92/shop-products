@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Product from "../models/product.js";
 import { validationResult } from "express-validator";
 import { deleteFile } from "../utils/file.js";
+import { CustomError } from "../utils/custom-err.js";
 
 export const getAddProduct = (
   req: Request,
@@ -58,7 +59,6 @@ export const postAddProduct = (
         price: price,
         description: description,
       },
-      // csrfToken: req.csrfToken(),
       errorMessage: errors.array()[0].msg,
       validationErrors: errors.array(),
     });
@@ -76,11 +76,8 @@ export const postAddProduct = (
     .then(() => {
       res.redirect("/admin/products");
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -109,11 +106,8 @@ export const getEditProduct = (
         validationErrors: [],
       });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
@@ -179,11 +173,8 @@ export const getProducts = (
         isAuthenticated: req.session.isLoggedIn,
       });
     })
-    .catch((err: any) => {
-      const error = new Error(err);
-      //@ts-ignore
-      error.httpStatusCode = 500;
-      return next(error);
+    .catch((err: Error) => {
+      return next(new CustomError(err.message, 500));
     });
 };
 
