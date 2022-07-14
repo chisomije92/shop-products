@@ -1,6 +1,8 @@
 # Shop-products CRUD App
 
-This is a simple CRUD app that enables the user to buy, create, update and delete commercial items.
+This is a basic CRUD app that enables the user to buy, create, update and delete commercial items.
+
+N.B: More emphasis was placed on the logic part of this project than on the user interface.
 
 ![image](https://user-images.githubusercontent.com/68636386/178941548-95ad3094-9df9-400b-80ec-7b4f1d7c6415.png)
 
