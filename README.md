@@ -2,6 +2,9 @@
 
 This is a simple CRUD app that enables the user to buy, create, update and delete commercial items.
 
+![image](https://user-images.githubusercontent.com/68636386/178941548-95ad3094-9df9-400b-80ec-7b4f1d7c6415.png)
+
+
 ## Table of contents
 
 - [Shop-products CRUD App](#shop-products-crud-app)
