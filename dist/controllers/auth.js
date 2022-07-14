@@ -137,11 +137,6 @@ export const postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         });
     }
     try {
-        const userDoc = yield User.findOne({ email: email });
-        if (userDoc) {
-            req.flash("error", "User already exists. Use another email.");
-            return res.redirect("/signup");
-        }
         const hashedPassword = yield bcrypt.hash(password, 12);
         const user = new User({
             email: email,

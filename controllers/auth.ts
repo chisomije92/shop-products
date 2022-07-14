@@ -145,11 +145,6 @@ export const postSignup = async (
   }
 
   try {
-    const userDoc = await User.findOne({ email: email });
-    if (userDoc) {
-      req.flash("error", "User already exists. Use another email.");
-      return res.redirect("/signup");
-    }
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = new User({
       email: email,
