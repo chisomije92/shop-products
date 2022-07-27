@@ -32,8 +32,8 @@ N.B: More emphasis was placed on the logic part of this project than on the user
 To use the app, please note the following:
 
 - Users can view the products listed on the app
-- It is imperative that the user signs up and login with any valid email address and password to add any products of your choice
-- The user can only edit, update and delete any product which they added themselves
+- It is imperative that the user signs up and login with any valid email address and password to add any products of theit choice
+- The user can only edit, update and delete any product which they added themselves.
 
 ## My process
 
@@ -45,6 +45,9 @@ To use the app, please note the following:
 - [Typescript](https://www.typescriptlang.org/) - Ensure JS type safety
 - [ExpressJs](https://expressjs.com/) - NodeJs Framework
 - [EJS](https://ejs.co/) - Dynamic HTML templating engine
+- [Express-sessions](https://www.npmjs.com/package/express-session) - Express session middleware 
+- [Nodemailer](https://nodemailer.com) - A module that facilitates sending of emails
+- [Multer](https://www.npmjs.com/package/multer) - A node.js middleware for handling multipart/form-data
 - [MongoDB](https://www.mongodb.com/) - Database
 - [Mongoose](https://mongoosejs.com/) - MongoDB ORM
 - [Heroku](https://www.heroku.com/) - Deployment
