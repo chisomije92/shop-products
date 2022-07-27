@@ -1,4 +1,7 @@
 const paymentForm = document.getElementById("paymentForm")!;
+const swipeBtn = document.getElementById("swipe-btn") as HTMLButtonElement;
+const swipeWidget = document.getElementById("swipe-modal") as HTMLDivElement;
+
 paymentForm.addEventListener("submit", payWithPaystack, false);
 function payWithPaystack(evt: Event) {
   evt.preventDefault();
@@ -30,3 +33,11 @@ function payWithPaystack(evt: Event) {
   });
   handler.openIframe();
 }
+
+const swipePayFn = (evt: Event) => {
+  evt.preventDefault();
+  // swipeWidget.classList.add("show");
+  swipeWidget.style.display = "block";
+};
+
+swipeBtn.addEventListener("click", swipePayFn);
