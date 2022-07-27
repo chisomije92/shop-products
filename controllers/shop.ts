@@ -108,8 +108,9 @@ export const getCart = async (
     res.render("shop/cart", {
       path: "/cart",
       pageTitle: "Your Cart",
-      products: products,
+      products: products.cart.items,
     });
+    console.log(products);
   } catch (err: any) {
     next(new CustomError(err.message, 500));
   }

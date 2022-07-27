@@ -95,8 +95,9 @@ export const getCart = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         res.render("shop/cart", {
             path: "/cart",
             pageTitle: "Your Cart",
-            products: products,
+            products: products.cart.items,
         });
+        console.log(products);
     }
     catch (err) {
         next(new CustomError(err.message, 500));
