@@ -31,7 +31,6 @@ function payWithPaystack(evt) {
 }
 const swipePayFn = (evt) => {
     evt.preventDefault();
-    // swipeWidget.classList.add("show");
     swipeWidget.style.display = "block";
 };
 swipeBtn.addEventListener("click", swipePayFn);

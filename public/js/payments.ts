@@ -36,7 +36,6 @@ function payWithPaystack(evt: Event) {
 
 const swipePayFn = (evt: Event) => {
   evt.preventDefault();
-  // swipeWidget.classList.add("show");
   swipeWidget.style.display = "block";
 };
 
