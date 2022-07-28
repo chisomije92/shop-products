@@ -29,10 +29,10 @@ function payWithPaystack(evt) {
     });
     handler.openIframe();
 }
-const swipePayFn = (evt) => {
+const showSwipeWidget = (evt) => {
     evt.preventDefault();
     swipeWidget.style.display = "block";
 };
-swipeBtn.addEventListener("click", swipePayFn);
+swipeBtn.addEventListener("click", showSwipeWidget);
 export {};
 //# sourceMappingURL=payments.js.map

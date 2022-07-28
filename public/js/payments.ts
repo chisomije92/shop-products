@@ -34,9 +34,9 @@ function payWithPaystack(evt: Event) {
   handler.openIframe();
 }
 
-const swipePayFn = (evt: Event) => {
+const showSwipeWidget = (evt: Event) => {
   evt.preventDefault();
   swipeWidget.style.display = "block";
 };
 
-swipeBtn.addEventListener("click", swipePayFn);
+swipeBtn.addEventListener("click", showSwipeWidget);
