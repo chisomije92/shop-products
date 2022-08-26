@@ -25,7 +25,7 @@ N.B: More emphasis was placed on the logic part of this project than on the user
 ### Links
 
 - Repo: [Github repo](https://github.com/chisomije92/shop-products)
-- Live Site URL: [Heroku Web URL](https://shop-products2.herokuapp.com/)
+- Live Site URL: [Vercel Web URL](https://shop-products-2.vercel.app/)
 
 ### Usage instruction
 
