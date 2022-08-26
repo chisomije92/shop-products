@@ -28,7 +28,7 @@ else {
     throw new Error("MONGO_CONN_STRING is not set");
 }
 const __dirname = path.resolve();
-export const app = express();
+const app = express();
 const store = new MongoStore({
     uri: conn_string,
     collection: "sessions",
@@ -113,4 +113,5 @@ mongoose
     console.log("Error connecting to MongoDB");
     console.log(err);
 });
+export default app;
 //# sourceMappingURL=server.js.map

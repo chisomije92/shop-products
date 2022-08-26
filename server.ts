@@ -33,7 +33,7 @@ if (process.env.MONGO_CONN_STRING) {
 }
 
 const __dirname = path.resolve();
-export const app = express();
+const app = express();
 
 const store = new MongoStore({
 	uri: conn_string,
@@ -141,3 +141,5 @@ mongoose
 		console.log("Error connecting to MongoDB");
 		console.log(err);
 	});
+
+export default app;
