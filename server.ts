@@ -67,7 +67,7 @@ const fileFilter = (
 };
 
 app.set("view engine", "ejs");
-app.set("views", "views");
+app.set("views", path.join(__dirname, "views"));
 
 app.use(compression());
 
