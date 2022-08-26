@@ -1,3 +1,4 @@
+/** @format */
 import express from "express";
 import bodyParser from "body-parser";
 import adminRoute from "./routes/admin.js";
@@ -27,7 +28,7 @@ else {
     throw new Error("MONGO_CONN_STRING is not set");
 }
 const __dirname = path.resolve();
-const app = express();
+export const app = express();
 const store = new MongoStore({
     uri: conn_string,
     collection: "sessions",
@@ -80,7 +81,7 @@ app.use((req, res, next) => {
         return next();
     }
     User.findById(req.session.user._id)
-        .then((user) => {
+        .then(user => {
         if (!user) {
             return next();
         }
@@ -108,7 +109,7 @@ mongoose
     .then(() => {
     app.listen(process.env.PORT || 3000);
 })
-    .catch((err) => {
+    .catch(err => {
     console.log("Error connecting to MongoDB");
     console.log(err);
 });

@@ -1,3 +1,5 @@
+/** @format */
+
 import express from "express";
 import { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
@@ -25,43 +27,43 @@ dotenv.config();
 
 let conn_string: string;
 if (process.env.MONGO_CONN_STRING) {
-  conn_string = process.env.MONGO_CONN_STRING;
+	conn_string = process.env.MONGO_CONN_STRING;
 } else {
-  throw new Error("MONGO_CONN_STRING is not set");
+	throw new Error("MONGO_CONN_STRING is not set");
 }
 
 const __dirname = path.resolve();
-const app = express();
+export const app = express();
 
 const store = new MongoStore({
-  uri: conn_string,
-  collection: "sessions",
+	uri: conn_string,
+	collection: "sessions",
 });
 
 const csrfProtection = csrf();
 const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, uuidv4() + "-" + file.originalname);
-  },
+	destination: (req, file, cb) => {
+		cb(null, "images");
+	},
+	filename: (req, file, cb) => {
+		cb(null, uuidv4() + "-" + file.originalname);
+	},
 });
 
 const fileFilter = (
-  req: Request,
-  file: Express.Multer.File,
-  cb: multer.FileFilterCallback
+	req: Request,
+	file: Express.Multer.File,
+	cb: multer.FileFilterCallback
 ) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
+	if (
+		file.mimetype === "image/png" ||
+		file.mimetype === "image/jpg" ||
+		file.mimetype === "image/jpeg"
+	) {
+		cb(null, true);
+	} else {
+		cb(null, false);
+	}
 };
 
 app.set("view engine", "ejs");
@@ -75,43 +77,43 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.static(path.join(__dirname, "dist")));
 app.use(
-  sessions({
-    secret: "my secret",
-    resave: false,
-    saveUninitialized: false,
-    store: store,
-  })
+	sessions({
+		secret: "my secret",
+		resave: false,
+		saveUninitialized: false,
+		store: store,
+	})
 );
 app.use(
-  multer({
-    storage: fileStorage,
-    fileFilter: fileFilter,
-  }).single("image")
+	multer({
+		storage: fileStorage,
+		fileFilter: fileFilter,
+	}).single("image")
 );
 app.use(csrfProtection);
 app.use(flash());
 
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
+	res.locals.isAuthenticated = req.session.isLoggedIn;
+	res.locals.csrfToken = req.csrfToken();
+	next();
 });
 
 app.use((req, res, next) => {
-  if (!req.session.user) {
-    return next();
-  }
-  User.findById(req.session.user._id)
-    .then((user) => {
-      if (!user) {
-        return next();
-      }
-      req.user = user;
-      next();
-    })
-    .catch((err: Error) => {
-      next(next(new CustomError(err.message, 500)));
-    });
+	if (!req.session.user) {
+		return next();
+	}
+	User.findById(req.session.user._id)
+		.then(user => {
+			if (!user) {
+				return next();
+			}
+			req.user = user;
+			next();
+		})
+		.catch((err: Error) => {
+			next(next(new CustomError(err.message, 500)));
+		});
 });
 
 app.use("/admin", adminRoute);
@@ -121,21 +123,21 @@ app.get("/500", get500Page);
 app.use(get404Page);
 
 app.use(
-  (error: CustomError, req: Request, res: Response, next: NextFunction) => {
-    res.status(500).render("500", {
-      pageTitle: "Error",
-      path: "/500",
-      isAuthenticated: req.session.isLoggedIn,
-    });
-  }
+	(error: CustomError, req: Request, res: Response, next: NextFunction) => {
+		res.status(500).render("500", {
+			pageTitle: "Error",
+			path: "/500",
+			isAuthenticated: req.session.isLoggedIn,
+		});
+	}
 );
 
 mongoose
-  .connect(conn_string)
-  .then(() => {
-    app.listen(process.env.PORT || 3000);
-  })
-  .catch((err) => {
-    console.log("Error connecting to MongoDB");
-    console.log(err);
-  });
+	.connect(conn_string)
+	.then(() => {
+		app.listen(process.env.PORT || 3000);
+	})
+	.catch(err => {
+		console.log("Error connecting to MongoDB");
+		console.log(err);
+	});
