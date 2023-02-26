@@ -7,7 +7,8 @@
 	"scripts": {
 		"build": "./node_modules/.bin/netlify-lambda build dist/src",
 		"start:netlify": "./node_modules/.bin/netlify-lambda serve dist/src",
-		"start": " nodemon dist/src/server.js"
+		"start": " node dist/src/server.js",
+		"dev": " nodemon dist/src/server.js"
 	},
 	"engines": {
 		"node": "16.17.0",
