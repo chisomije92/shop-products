@@ -3,7 +3,7 @@
 	"name": "shop-products",
 	"builds": [
 		{
-			"src": "/dist/server.js",
+			"src": "/dist/src/server.js",
 			"use": "@vercel/node",
 			"config": { "includeFiles": ["dist/**"] }
 		}
