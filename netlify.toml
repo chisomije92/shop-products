@@ -1,7 +1,7 @@
 [build]
   functions = "express"
   publish = "dist/src"
-
+command = "npm run start"
 
 
 [dev]
