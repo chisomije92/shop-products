@@ -121,7 +121,7 @@ app.use((req, res, next) => {
 		});
 });
 
-app.use(`/.netlify/functions/api`, router);
+//app.use(`/.netlify/functions/api`, router);
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(authRoute);

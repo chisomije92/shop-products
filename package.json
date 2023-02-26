@@ -5,14 +5,8 @@
 	"main": "dist/src/server.js",
 	"type": "module",
 	"scripts": {
-		"build": "./node_modules/.bin/netlify-lambda build dist/src",
-		"start:netlify": "./node_modules/.bin/netlify-lambda serve dist/src",
 		"start": " node dist/src/server.js",
 		"dev": " nodemon dist/src/server.js"
-	},
-	"engines": {
-		"node": "16.17.0",
-		"npm": "8.12.2"
 	},
 	"devDependencies": {
 		"@types/axios": "^0.14.0",
@@ -62,7 +56,7 @@
 		"multer": "^1.4.5-lts.1",
 		"mysql2": "^2.3.3",
 		"netlify-lambda": "^2.0.16",
-		"node-fetch": "^3.3.0",
+		"node-fetch": "2.6.1",
 		"node-http": "^0.0.5",
 		"nodemailer": "^6.7.5",
 		"nodemon": "^2.0.16",

@@ -3,9 +3,8 @@ import path from "path";
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import Product from "../models/product.js";
-import { UserType } from "../models/user.js";
+import Users from "../models/user.js";
 import Order from "../models/order.js";
-import fetch from "node-fetch";
 import { CustomError } from "../utils/custom-err.js";
 
 const ITEMS_PER_PAGE = 2;
@@ -110,7 +109,6 @@ export const getCart = async (
       pageTitle: "Your Cart",
       products: products.cart.items,
     });
-    console.log(products);
   } catch (err: any) {
     next(new CustomError(err.message, 500));
   }
@@ -128,15 +126,27 @@ export const postCart = async (
   res.redirect("/cart");
 };
 
-export const deleteCartProduct = (
+export const deleteCartProduct = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const prodId: string = req.body.productId;
   try {
-    req.user?.removeFromCart(prodId);
-    res.redirect("/cart");
+    if (req.user) {
+      const user = await Users.findById(req.user.id)
+      const cartItems = user?.cart.items.slice().filter(item => {
+        return item.productId.toString() !== prodId
+      })
+
+      await Users.findOneAndUpdate({ id: req.user.id }, {
+        cart: {
+          items: cartItems
+        }
+      })
+      res.redirect("/cart");
+
+    }
   } catch (err: any) {
     next(new CustomError(err.message, 500));
   }
@@ -245,7 +255,7 @@ export const getInvoice = async (
       return next(new Error("Unauthorized"));
     }
     const invoiceName = "invoice-" + orderId + ".pdf";
-    const invoicePath = path.join("data", "invoices", invoiceName);
+    const invoicePath = path.join("src", "data", "invoices", invoiceName);
     const pdfDoc = new PDFDocument();
     pdfDoc.pipe(fs.createWriteStream(invoicePath));
     pdfDoc.pipe(res);
@@ -258,10 +268,10 @@ export const getInvoice = async (
         .fontSize(16)
         .text(
           product.product.title +
-            " - " +
-            product.quantity +
-            " x " +
-            product.product.price
+          " - " +
+          product.quantity +
+          " x " +
+          product.product.price
         );
     });
     pdfDoc.text("--------------------");

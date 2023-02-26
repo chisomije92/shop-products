@@ -1,5 +1,11 @@
 [build]
-  functions = "functions"
+  functions = "express"
+  publish = "dist/src"
+
+
 
 [dev]
-  publish = "dist"
+  publish = "dist/src"
+  command = "npm run dev"
+  port = 4000
+  targetPort = 3000

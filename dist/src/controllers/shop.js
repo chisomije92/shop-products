@@ -11,8 +11,8 @@ import path from "path";
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import Product from "../models/product.js";
+import Users from "../models/user.js";
 import Order from "../models/order.js";
-import fetch from "node-fetch";
 import { CustomError } from "../utils/custom-err.js";
 const ITEMS_PER_PAGE = 2;
 export const getProducts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -97,7 +97,6 @@ export const getCart = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             pageTitle: "Your Cart",
             products: products.cart.items,
         });
-        console.log(products);
     }
     catch (err) {
         next(new CustomError(err.message, 500));
@@ -110,17 +109,26 @@ export const postCart = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     yield ((_b = req.user) === null || _b === void 0 ? void 0 : _b.addToCart(product));
     res.redirect("/cart");
 });
-export const deleteCartProduct = (req, res, next) => {
-    var _a;
+export const deleteCartProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const prodId = req.body.productId;
     try {
-        (_a = req.user) === null || _a === void 0 ? void 0 : _a.removeFromCart(prodId);
-        res.redirect("/cart");
+        if (req.user) {
+            const user = yield Users.findById(req.user.id);
+            const cartItems = user === null || user === void 0 ? void 0 : user.cart.items.slice().filter(item => {
+                return item.productId.toString() !== prodId;
+            });
+            yield Users.findOneAndUpdate({ id: req.user.id }, {
+                cart: {
+                    items: cartItems
+                }
+            });
+            res.redirect("/cart");
+        }
     }
     catch (err) {
         next(new CustomError(err.message, 500));
     }
-};
+});
 export const getOrders = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _c;
     try {
@@ -201,7 +209,7 @@ export const getInvoice = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             return next(new Error("Unauthorized"));
         }
         const invoiceName = "invoice-" + orderId + ".pdf";
-        const invoicePath = path.join("data", "invoices", invoiceName);
+        const invoicePath = path.join("src", "data", "invoices", invoiceName);
         const pdfDoc = new PDFDocument();
         pdfDoc.pipe(fs.createWriteStream(invoicePath));
         pdfDoc.pipe(res);

@@ -93,7 +93,7 @@ app.use((req, res, next) => {
         next(next(new CustomError(err.message, 500)));
     });
 });
-app.use(`/.netlify/functions/api`, router);
+//app.use(`/.netlify/functions/api`, router);
 app.use("/admin", adminRoute);
 app.use(shopRoute);
 app.use(authRoute);
