@@ -56,9 +56,9 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static("images"));
-app.use(express.static("dist"));
+app.use(express.static(path.join(__dirname, "dist")));
 app.use(sessions({
     secret: "my secret",
     resave: false,
