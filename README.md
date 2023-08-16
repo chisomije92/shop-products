@@ -50,7 +50,7 @@ To use the app, please note the following:
 - [Multer](https://www.npmjs.com/package/multer) - A node.js middleware for handling multipart/form-data
 - [MongoDB](https://www.mongodb.com/) - Database
 - [Mongoose](https://mongoosejs.com/) - MongoDB ORM
-- [Heroku](https://www.heroku.com/) - Deployment
+- [Render](https://render.com/) - Deployment
 
 ### Knowledge Acquired/Areas improved on
 
