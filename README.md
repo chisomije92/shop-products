@@ -1,6 +1,6 @@
 # Shop-products CRUD App
 
-This is a basic CRUD app that enables the user to buy, create, update and delete commercial items.
+This is a basic fullstack CRUD app that enables the user to buy, create, update and delete commercial items.
 
 N.B: More emphasis was placed on the logic part of this project than on the user interface.
 
@@ -25,7 +25,7 @@ N.B: More emphasis was placed on the logic part of this project than on the user
 ### Links
 
 - Repo: [Github repo](https://github.com/chisomije92/shop-products)
-- Live Site URL: [Vercel Web URL](https://shop-products-awgc.vercel.app/)
+- Live Site URL: [Render Web URL](https://shop-products.onrender.com/)
 
 ### Usage instruction
 
@@ -56,8 +56,8 @@ To use the app, please note the following:
 
 I improved my knowledge on and gained practical experience with the use of the following:
 
-- NodeJs
-- ExpressJs
+- NodeJS
+- ExpressJS
 - EJS
 - Mongoose
 
