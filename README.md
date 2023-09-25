@@ -48,7 +48,9 @@ To use the app, please note the following:
 - [Express-sessions](https://www.npmjs.com/package/express-session) - Express session middleware 
 - [Nodemailer](https://nodemailer.com) - A module that facilitates sending of emails
 - [Multer](https://www.npmjs.com/package/multer) - A node.js middleware for handling multipart/form-data
-- [MongoDB](https://www.mongodb.com/) - Database
+- [MySQL ](https://www.mysql.com/) - A relational database management system (RDBMS)
+- [Sequelize](https://sequelize.org/) - A modern TypeScript and Node.js ORM for MySQL
+- [MongoDB](https://www.mongodb.com/) - A NoSQL database management application
 - [Mongoose](https://mongoosejs.com/) - MongoDB ORM
 - [Render](https://render.com/) - Deployment
 
